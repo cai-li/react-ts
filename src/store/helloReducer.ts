@@ -25,13 +25,13 @@ const initialState: HelloState = {
   todos: [
     { text: 'caili', completed: false }
   ],
-  visibilityFilter: 'show-all',
+  visibilityFilter: '',
 }
 
 function visibilityFilter(state: string = initialState.visibilityFilter, action: ActionType) {
   switch (action.type) {
     case SET_VISIBILITY_FILTER:
-      return action.filter
+      return action.param
     default:
       return state
   }
@@ -43,13 +43,13 @@ function todos(state: ItemTodo[] = initialState.todos, action: ActionType) {
       return [
         ...state,
         {
-          text: action.text,
+          text: action.param,
           completed: false
         }
       ]
     case TOGGLE_TODO:
       return state.map((todo, index) =>
-        action.index === index ?
+        action.param === index ?
           { text: todo.text, completed: !todo.completed } :
           todo,
       )
@@ -58,4 +58,4 @@ function todos(state: ItemTodo[] = initialState.todos, action: ActionType) {
   }
 }
 
-export const reducer = combineReducers({ visibilityFilter, todos })
+export const HelloReducer = combineReducers({ visibilityFilter, todos })

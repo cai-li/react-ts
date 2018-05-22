@@ -29,6 +29,12 @@ const About = (location: any, cb: any) => {
   }, ()=>{} , 'about')
 }
 
+const Hello = (location: any, cb: any) => {
+  require.ensure([], (require: NodeRequire) => {
+    cb(null, require("../page/hello").default);
+  }, ()=>{} , 'hello')
+}
+
 const Home = (location: any, cb: any) => {
   require.ensure([], (require: NodeRequire) => {
     cb(null, require("../page/home/index").default);
@@ -50,6 +56,8 @@ export default () => (
         getComponent={About} />
       <Route path="login"
         getComponent={Login} />
+      <Route path="hello"
+        getComponent={Hello} />
       <Route path="home"
         getComponent={Home}>
         <Route path="messages/:id"

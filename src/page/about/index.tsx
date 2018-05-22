@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { browserHistory } from 'react-router'
+import Store from '../../store/index'
 
 export default class About extends React.Component {
   public state: any
@@ -10,6 +11,7 @@ export default class About extends React.Component {
   }
 
   public toHome(){
+    console.log(Store.getState())
     browserHistory.push("/login")
   }
 
