@@ -2,9 +2,12 @@ import * as React from 'react'
 import Store from '../store/index'
 import { HelloProps, ItemTodo, HelloState } from '../store/helloreducer'
 import HelloAction from '../store/helloAction'
+import { Button } from 'antd'
+import './hello.scss'
 
 export default class Hello extends React.Component<HelloProps, HelloState> {
   public state: HelloState
+  private unsubscribe: any
   constructor(props: HelloProps) {
     super(props)
     this.state = {
@@ -15,7 +18,7 @@ export default class Hello extends React.Component<HelloProps, HelloState> {
     }
   }
 
-  public fetchCounter1() {
+  private fetchCounter1() {
     HelloAction.bindAddTodo('张山')
   }
 
@@ -24,19 +27,19 @@ export default class Hello extends React.Component<HelloProps, HelloState> {
   }
 
   public componentDidMount() {
-    const unsubscribe = Store.subscribe(() => {
+    this.unsubscribe = Store.subscribe(() => {
       this.setState(Store.getState())
     })
   }
 
   public componentWillUnmount() {
-
+    this.unsubscribe()
   }
 
   public render() {
-    let todos 
-    if(this.state) {
-      todos = this.state.todos.filter((todo)=> todo.text.includes(this.state.visibilityFilter))
+    let todos
+    if (this.state) {
+      todos = this.state.todos.filter((todo) => todo.text.includes(this.state.visibilityFilter))
     }
 
     return (
@@ -51,6 +54,7 @@ export default class Hello extends React.Component<HelloProps, HelloState> {
 
         <div className="buttonGroup">
           <button onClick={(e) => this.fetchCounter1()}>dispatch</button>
+          <Button type="primary">Primary</Button>
         </div>
       </div>
     )
