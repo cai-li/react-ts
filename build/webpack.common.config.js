@@ -12,10 +12,9 @@ module.exports = {
     app: resolve("../src/index.tsx")
   },
   output: {
-    filename: "[name].js", // 输出 bundle 的名称,会被写入到path指定的目录下
+    filename: "js/[name].js", // 输出 bundle 的名称,会被写入到path指定的目录下
     path: resolve('../dist'),
-    publicPath: "/dist/",
-    chunkFilename: "[name].[chunkhash:5].chunk.js"
+    chunkFilename: "js/[name].[chunkhash:5].chunk.js"
   },
 
   devtool: "source-map",
@@ -64,15 +63,16 @@ module.exports = {
       filename: '[name].[contenthash:5].css',
       allChunks: true,
     }),
-    new HtmlWebpackPlugin({
+    // new HtmlWebpackPlugin({
+    //   template:resolve("../src/index.html"),
+    // })
+     //将打包后的资源注入到html文件内    
+     new HtmlWebpackPlugin({
+      filename:'index.html',
       template:resolve("../src/index.html"),
-    })
-     // 将打包后的资源注入到html文件内    
-    //  new HtmlWebpackPlugin({
-    //   template:resolve("../index.html"),
-    //   inject: true,
-    //   favicon:resolve("../src/asset/favicon.ico"),
-    //   chunks:['app']
-    // }),
+      inject:'body',
+      favicon:resolve("../src/asset/favicon.ico"),
+      chunks:['app']
+    }),
   ],
 };
