@@ -8,7 +8,7 @@ function resolve(relatedPath) {
 
 config.devServer = {
   hot: true,
-  port: 1994,
+  port: 1995,
   contentBase: resolve('../src'),
 }
 config.plugins.push(new webpack.HotModuleReplacementPlugin());
