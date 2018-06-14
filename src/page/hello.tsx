@@ -1,9 +1,9 @@
 import * as React from 'react'
+import './hello.scss'
 import Store from '../store/index'
 import { HelloProps, ItemTodo, HelloState } from '../store/helloreducer'
 import HelloAction from '../store/helloAction'
 import { Button } from 'antd'
-import './hello.scss'
 
 export default class Hello extends React.Component<HelloProps, HelloState> {
   public state: HelloState
@@ -53,8 +53,8 @@ export default class Hello extends React.Component<HelloProps, HelloState> {
         </div>
 
         <div className="buttonGroup">
-          <button onClick={(e) => this.fetchCounter1()}>dispatch</button>
-          <Button type="primary">Primary</Button>
+          <Button onClick={() => this.fetchCounter1()}>dispatch</Button>
+          <Button type="primary">Dashed</Button>
         </div>
       </div>
     )

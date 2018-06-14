@@ -1,7 +1,11 @@
 const webpack = require('webpack')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const tsImportPluginFactory = require('ts-import-plugin')
 const path = require('path')
+
+const isLocal = process.env.NODE_ENV === 'local'
+const isDevelop = process.env.NODE_ENV === 'develop'
 
 function resolve(relatedPath) {
   return path.join(__dirname, relatedPath)
@@ -9,7 +13,7 @@ function resolve(relatedPath) {
 
 module.exports = {
   entry: {
-    app: resolve('../src/index.tsx')
+    app: resolve('../src/index.tsx'),
   },
   output: {
     filename: 'js/[name].js', // 输出 bundle 的名称,会被写入到path指定的目录下
@@ -26,9 +30,19 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.tsx?$/,
-        loader: 'ts-loader'
-      },
+				test: /\.(ts|tsx|js|jsx)$/,
+				exclude: /node_modules/,
+				loader: 'ts-loader',
+				options: {
+          transpileOnly: true,
+					getCustomTransformers: () => ({
+						before: [tsImportPluginFactory({ libraryName: "antd", style: "css" })]
+          }), 
+          compilerOptions: {
+            module: 'es2015'
+          }
+				}
+			},
       {
         test: /\.css$/,
         use: [
@@ -70,10 +84,8 @@ module.exports = {
     new ExtractTextPlugin({
       filename: '[name].[contenthash:5].css',
       allChunks: true,
+      disable: isLocal,
     }),
-    // new HtmlWebpackPlugin({
-    //   template:resolve('../src/index.html'),
-    // })
      //将打包后的资源注入到html文件内    
      new HtmlWebpackPlugin({
       filename:'index.html',
