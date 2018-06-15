@@ -1,5 +1,5 @@
 import * as React from 'react'
-import './hello.scss'
+import './hello.less'
 import Store from '../store/index'
 import { HelloProps, ItemTodo, HelloState } from '../store/helloreducer'
 import HelloAction from '../store/helloAction'
@@ -54,7 +54,7 @@ export default class Hello extends React.Component<HelloProps, HelloState> {
 
         <div className="buttonGroup">
           <Button onClick={() => this.fetchCounter1()}>dispatch</Button>
-          <Button type="primary">Dashed</Button>
+          <Button type = "primary">Dashed</Button>
         </div>
       </div>
     )
