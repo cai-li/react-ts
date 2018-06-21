@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "start": "set NODE_ENV=local&&webpack-dev-server --config ./build/webpack.dev.config.js",
-    "develop":"set NODE_ENV=develop&&webpack-dev-server --config ./build/webpack.dev.config.js"
+    "develop": "set NODE_ENV=develop&&webpack-dev-server --config ./build/webpack.dev.config.js"
   },
   "author": "",
   "license": "ISC",
@@ -17,6 +17,7 @@
     "@types/webpack-env": "^1.13.6",
     "antd": "^3.6.2",
     "awesome-typescript-loader": "^5.0.0",
+    "localforage": "^1.5.3",
     "moment": "^2.22.1",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",

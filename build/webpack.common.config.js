@@ -46,7 +46,11 @@ module.exports = {
     extensions: ['.ts', '.tsx', '.js', '.json'],
     alias: {
       styles: resolve('../src/styles')
-    }
+    },
+    modules: [
+      './src',
+      'node_modules',
+    ],
   },
 
   module: {

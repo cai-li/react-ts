@@ -1,8 +1,9 @@
 import * as React from 'react'
-import { Router, Route, IndexRoute } from 'react-router'
+import { Router, Route, IndexRoute, RouterState, RedirectFunction } from 'react-router'
 import hashHistory from './history'
-import App from '../app'
-import Welcome from '../page/welcome/welcome'
+import App from 'app'
+import Welcome from 'page/welcome/welcome'
+import JwtService from 'services/jwtService'
 
 interface indexRouteCfg {
   component: any
@@ -20,42 +21,46 @@ interface routeCfg {
 const Login = (location: any, cb: any) => {
   require.ensure([], (require: NodeRequire) => {
     cb(null, require("../page/login/index").default);
-  }, ()=>{} , 'login')
+  }, () => { }, 'login')
 }
 
 const About = (location: any, cb: any) => {
   require.ensure([], (require: NodeRequire) => {
     cb(null, require("../page/about/index").default);
-  }, ()=>{} , 'about')
+  }, () => { }, 'about')
 }
 
 const Hello = (location: any, cb: any) => {
   require.ensure([], (require: NodeRequire) => {
     cb(null, require("../page/hello").default);
-  }, ()=>{} , 'hello')
+  }, () => { }, 'hello')
 }
 
 const Home = (location: any, cb: any) => {
   require.ensure([], (require: NodeRequire) => {
     cb(null, require("../page/home/index").default);
-  }, ()=>{} , 'home')
+  }, () => { }, 'home')
 }
 
 const Message = (location: any, cb: any) => {
   require.ensure([], (require: NodeRequire) => {
     cb(null, require("../page/message/message").default);
-  }, ()=>{} , 'message')
+  }, () => { }, 'message')
+}
+
+function isLogin(nextState: RouterState, replaceState: RedirectFunction) {
+  const jwt = JwtService.loadJwt()
+  if (jwt === void 0) replaceState('/login')
 }
 
 export default () => (
   <Router history={hashHistory}>
     <Route path="/"
-      component={App}>
+      component={App}
+      onEnter={isLogin}>
       <IndexRoute component={Welcome} />
       <Route path="about"
         getComponent={About} />
-      <Route path="login"
-        getComponent={Login} />
       <Route path="hello"
         getComponent={Hello} />
       <Route path="home"
@@ -67,5 +72,7 @@ export default () => (
           onEnter={({ params }: any, replace: any) => replace(`/messages/${params.id}`)} />
       </Route>
     </Route>
+    <Route path="/login"
+      getComponent={Login} />
   </Router>
 )
