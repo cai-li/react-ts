@@ -5,7 +5,7 @@ interface propsType {
   [name:string]:any
 }
 
-export default class Welcome extends React.Component<propsType,{}>{
+export default class Page404 extends React.Component<propsType,{}>{
   public state: any
 
   constructor(props: any) {
@@ -15,8 +15,8 @@ export default class Welcome extends React.Component<propsType,{}>{
 
   public render() {
     return (
-      <div className="welcomeWrapper">
-        Hello ！小读
+      <div className="errorWrapper">
+        404 ! 错误
       </div>
     )
   }

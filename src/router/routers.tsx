@@ -2,7 +2,6 @@ import * as React from 'react'
 import { Router, Route, IndexRoute, RouterState, RedirectFunction } from 'react-router'
 import hashHistory from './history'
 import App from 'app'
-import Welcome from 'page/welcome/welcome'
 import JwtService from 'services/jwtService'
 
 interface indexRouteCfg {
@@ -48,17 +47,11 @@ const Message = (location: any, cb: any) => {
   }, () => { }, 'message')
 }
 
-function isLogin(nextState: RouterState, replaceState: RedirectFunction) {
-  const jwt = JwtService.loadJwt()
-  if (jwt === void 0) replaceState('/login')
-}
-
 export default () => (
   <Router history={hashHistory}>
     <Route path="/"
-      component={App}
-      onEnter={isLogin}>
-      <IndexRoute component={Welcome} />
+      component={App}>
+      <IndexRoute getComponent={Login} />
       <Route path="about"
         getComponent={About} />
       <Route path="hello"
@@ -72,7 +65,5 @@ export default () => (
           onEnter={({ params }: any, replace: any) => replace(`/messages/${params.id}`)} />
       </Route>
     </Route>
-    <Route path="/login"
-      getComponent={Login} />
   </Router>
 )

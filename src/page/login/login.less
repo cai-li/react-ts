@@ -1,0 +1,26 @@
+@import '~styles/theme';
+
+.pageLogin {
+  width:100vw;
+  height:100vh;
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+
+  header{
+    flex: 0 0 auto;
+    height:250px;
+    background: @theme-base-black; 
+  }
+
+  main {
+    display:flex;
+    flex:1;
+    background: @theme-light2-black;
+    justify-content: center;
+    .pageLogin-form{
+      width:300px;
+      margin-top:15px;
+    }
+  }
+}
