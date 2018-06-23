@@ -4,23 +4,55 @@ export const ADD_TODO = 'ADD_TODO'
 export const TOGGLE_TODO = 'TOGGLE_TODO'
 export const SET_VISIBILITY_FILTER = 'SET_VISIBILITY_FILTER'
 
-function Add_Todo(text: string) {
-  return { type: ADD_TODO, text }
+class HelloAction {
+  constructor() {
+  }
+
+  /**
+   * 返回action
+   * 
+   * @param {string} type 执行动作
+   * @param {(string | number)} param 数据参数
+   * @returns action 将数据传到store的荷载
+   * @memberof HelloAction
+   */
+  public ActionFun(type: string, param: string | number) {
+    return { type, param }
+  }
+
+
+  /**
+   * 新增一行数据（action的发起）
+   * 
+   * @param {string} text 
+   * @memberof HelloAction
+   */
+  public bindAddTodo(text: string) {
+    Store.dispatch(this.ActionFun(ADD_TODO, text))
+  }
+
+  /**
+   * 更改一行数据
+   * 
+   * @param {number} index 
+   * @memberof HelloAction
+   */
+  public bindToggleTodo(index: number) {
+    Store.dispatch(this.ActionFun(TOGGLE_TODO, index))
+  }
+  /**
+   * 
+   * 
+   * @param {string} text 
+   * @memberof HelloAction
+   */
+  public bindFilter(text: string) {
+    Store.dispatch(this.ActionFun(SET_VISIBILITY_FILTER, text))
+  }
+
+  public bindOther(text: string) {
+    Store.dispatch(this.ActionFun('other', text))
+  }
 }
 
-function TOGGLE_Todo(index: number) {
-  return { type: TOGGLE_TODO, index }
-}
-
-function SetVisibilityFilter(filter: string) {
-  return { type: SET_VISIBILITY_FILTER, filter }
-}
-
-function other(filter: string) {
-  return { type: other, filter }
-}
-
-export const bindAddTodo = (text: string) => Store.dispatch(Add_Todo(text))
-export const bindToggleTodo = (text: number) => Store.dispatch(TOGGLE_Todo(text))
-export const bindFilter = (text: string) => Store.dispatch(SetVisibilityFilter(text))
-export const bindOther = (text: string) => Store.dispatch(other(text))
+export default new HelloAction()
