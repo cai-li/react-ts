@@ -1,7 +1,6 @@
 const webpack = require('webpack')
 var fs = require('fs')
 const path = require('path')
-const lessToJs = require('less-vars-to-js')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')//css单独打包
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const tsImportPluginFactory = require('ts-import-plugin')
