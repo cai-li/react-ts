@@ -98,7 +98,10 @@ async function isChanged(prevState: RouterState, nextState: RouterState, replace
 
 // 进入home时
 async function isEnterHome(nextState: RouterState, replace: RedirectFunction): Promise<void> {
-  if (!UserService.current) {
+  var reg = /\/home.*/
+  const inhomepage = reg.test(nextState.location.pathname)
+  // 没有通过登录进入home
+  if (!UserService.current && !nextState.location.query.user && inhomepage) {
     replace('/')
     return
   }

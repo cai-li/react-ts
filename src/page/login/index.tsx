@@ -8,7 +8,6 @@ import hashHistory from 'router/history'
 import UserService from 'services/userService'
 
 const FormItem = Form.Item
-const jwt = 'kerii34234234mdfk8s99dssf'
 
 class Login extends React.Component<FormComponentProps, any> {
   public state: any
@@ -22,16 +21,12 @@ class Login extends React.Component<FormComponentProps, any> {
     e.preventDefault()
     this.props.form.validateFields(async (err, values) => {
       if (!err) {
-        console.log(values)
-        const user = await UserService.login(values.userName, values.password)
-
-        CacheService.open(user.id)
-        JwtService.saveJwt(jwt)
+        await UserService.login(values.userName, values.password)
 
         const query = UserService.current ? { user: UserService.current.id } : void 0
         hashHistory.push({
-          pathname:'/home',
-          query
+          pathname: '/home',
+          query: { user: UserService.current.id }
         })
       }
     })
