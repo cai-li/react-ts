@@ -7,6 +7,11 @@
   flex-direction: column;
   justify-content: center;
 
+  .ant-form-item-children {
+    display: flex;
+    justify-content: space-between;
+  }
+
   header{
     flex: 0 0 auto;
     height:250px;
@@ -38,6 +43,9 @@
         color: @theme-light4-black;
       }
 
+      &--submit {
+        width:100%;
+      }
     }
   }
 }

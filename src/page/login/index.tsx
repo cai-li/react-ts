@@ -5,9 +5,9 @@ import { FormComponentProps } from 'antd/lib/form/Form'
 import CacheService from 'services/cacheService'
 import JwtService from 'services/jwtService'
 import hashHistory from 'router/history'
+import UserService from 'services/userService'
 
 const FormItem = Form.Item
-const userId = 'cai123ld3c7f8k2h3j23k'
 const jwt = 'kerii34234234mdfk8s99dssf'
 
 class Login extends React.Component<FormComponentProps, any> {
@@ -15,16 +15,24 @@ class Login extends React.Component<FormComponentProps, any> {
 
   constructor(props: FormComponentProps) {
     super(props)
-    this.state = null
+    this.state = {}
   }
 
-  private submit(e: any) {
+  private async submit(e: any): Promise<void> {
     e.preventDefault()
-    this.props.form.validateFields((err, values) => {
-      if(!err){
-        CacheService.open(userId)
+    this.props.form.validateFields(async (err, values) => {
+      if (!err) {
+        console.log(values)
+        const user = await UserService.login(values.userName, values.password)
+
+        CacheService.open(user.id)
         JwtService.saveJwt(jwt)
-        hashHistory.push('/hello')
+
+        const query = UserService.current ? { user: UserService.current.id } : void 0
+        hashHistory.push({
+          pathname:'/home',
+          query
+        })
       }
     })
   }
@@ -61,11 +69,15 @@ class Login extends React.Component<FormComponentProps, any> {
                 })(
                   <Checkbox>记住密码</Checkbox>
                   )}
-                <a className="login-form-forgot" href="">忘记密码</a>
-                <Button type="primary" htmlType="submit" className="login-form-button">
+                <a className="login-form-forgot" href="javascript:;">忘记密码</a>
+              </FormItem>
+              <FormItem>
+                <Button type="primary" size="large" htmlType="submit" className="login-form-button pageLogin-form--submit">
                   登录
                 </Button>
-                <a href="">立即注册</a>
+              </FormItem>
+              <FormItem>
+                <a className="login-form-forgot" href="javascript:;">立即注册</a>
               </FormItem>
             </Form>
           </div>
