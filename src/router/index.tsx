@@ -8,19 +8,6 @@ import UserService from 'services/userService'
 import { RouteDef } from './routerdef'
 import { When } from 'utils/common'
 
-interface indexRouteCfg {
-  component: any
-}
-
-interface routeCfg {
-  path: string
-  component: any
-  getComponent: any
-  indexRoute?: indexRouteCfg
-  onEnter?: (params: any, replace: any) => void
-  childRoutes?: any
-}
-
 const P404 = (location: any, cb: any) => {
   require.ensure([], (require: NodeRequire) => {
     cb(null, require("../page/404/index").default);
@@ -65,18 +52,8 @@ function trustedRoute(state: RouterState) {
   }
 }
 
-function isRouteValid(to: RouterState): boolean {
-  const directRoutes = [RouteDef.p404]
-
-  return When.check(to.location.pathname).within(directRoutes)
-}
-
 // url发生变化
 async function isChanged(prevState: RouterState, nextState: RouterState, replace: RedirectFunction) {
-  if (isRouteValid(nextState)) {
-    // todo 清除页面内缓存数据
-  }
-
   try {
     if (UserService.current) {
       // 从登录页面进入
@@ -140,13 +117,17 @@ export default () => (
   <Router history={hashHistory}>
     <Route path="/"
       component={App}>
+      {/* 登录 */}
       <IndexRoute getComponent={Login} />
-      <Route path={RouteDef.about}
-        getComponent={About} />
+      {/* home */}
       <Route path={RouteDef.home}
         getComponent={Home}
         onChange={isChanged}
         onEnter={isEnterHome}>
+        {/* 关于我们 */}
+        <Route path={RouteDef.about}
+          getComponent={About} />
+        {/* 消息中心 */}
         <Route path="messages/:id"
           getComponent={Message} />
         <Route path="messages/:id"
@@ -156,8 +137,9 @@ export default () => (
 
       <Route path={RouteDef.hello}
         getComponent={Hello} />
-
-      <Route path={RouteDef.p404}
+        
+      {/* 404 */}
+      <Route path="*"
         getComponent={P404} />
     </Route>
   </Router>
