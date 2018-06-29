@@ -1,8 +1,7 @@
 import * as React from 'react'
 import './hello.less'
 import Store from '../store/index'
-import { HelloProps, ItemTodo, HelloState } from '../store/helloreducer'
-import HelloAction from '../store/helloAction'
+import HelloAction, { HelloProps, HelloState, ItemTodo } from 'store/helloAction'
 import { Button } from 'antd'
 
 export default class Hello extends React.Component<HelloProps, HelloState> {
@@ -37,14 +36,14 @@ export default class Hello extends React.Component<HelloProps, HelloState> {
   }
 
   public render() {
-    let todos
+    let { todos, visibilityFilter } = this.state
     if (this.state) {
-      todos = this.state.todos.filter((todo) => todo.text.includes(this.state.visibilityFilter))
+      todos = todos.filter((todo) => todo.text.includes(visibilityFilter))
     }
 
     return (
       <div className="hello">
-        <input type="text" value={this.state.visibilityFilter} onChange={(e) => this.filterChanged(e)} />
+        <input type="text" value={visibilityFilter} onChange={(e) => this.filterChanged(e)} />
 
         <div className="greeting">
           {todos && todos.map((todo, index) => {
@@ -54,7 +53,7 @@ export default class Hello extends React.Component<HelloProps, HelloState> {
 
         <div className="buttonGroup">
           <Button onClick={() => this.fetchCounter1()}>dispatch</Button>
-          <Button type = "primary">Dashed</Button>
+          <Button type="primary">Dashed</Button>
         </div>
       </div>
     )

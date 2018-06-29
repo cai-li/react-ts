@@ -1,57 +1,61 @@
 import Store from './index'
+import { AnyAction } from 'redux'
 
 export const ADD_TODO = 'ADD_TODO'
 export const TOGGLE_TODO = 'TOGGLE_TODO'
 export const SET_VISIBILITY_FILTER = 'SET_VISIBILITY_FILTER'
+
+export type HelloProps = any
+
+export interface ItemTodo {
+  text: string
+  completed: boolean
+}
+
+export interface HelloState {
+  todos: ItemTodo[]
+  visibilityFilter: string
+}
+
+function ActionFun(type: string, payload: string | number): AnyAction {
+  return { type, payload }
+}
 
 class HelloAction {
   constructor() {
   }
 
   /**
-   * 返回action
-   * 
-   * @param {string} type 执行动作
-   * @param {(string | number)} param 数据参数
-   * @returns action 将数据传到store的荷载
-   * @memberof HelloAction
-   */
-  public ActionFun(type: string, param: string | number) {
-    return { type, param }
-  }
-
-
-  /**
    * 新增一行数据（action的发起）
    * 
-   * @param {string} text 
+   * @param {string} payload 
    * @memberof HelloAction
    */
-  public bindAddTodo(text: string) {
-    Store.dispatch(this.ActionFun(ADD_TODO, text))
+  public bindAddTodo(payload: string) {
+    Store.dispatch(ActionFun(ADD_TODO, payload))
   }
 
   /**
    * 更改一行数据
    * 
-   * @param {number} index 
+   * @param {number} payload 
    * @memberof HelloAction
    */
-  public bindToggleTodo(index: number) {
-    Store.dispatch(this.ActionFun(TOGGLE_TODO, index))
+  public bindToggleTodo(payload: number) {
+    Store.dispatch(ActionFun(TOGGLE_TODO, payload))
   }
   /**
    * 
    * 
-   * @param {string} text 
+   * @param {string} payload 
    * @memberof HelloAction
    */
-  public bindFilter(text: string) {
-    Store.dispatch(this.ActionFun(SET_VISIBILITY_FILTER, text))
+  public bindFilter(payload: string) {
+    Store.dispatch(ActionFun(SET_VISIBILITY_FILTER, payload))
   }
 
-  public bindOther(text: string) {
-    Store.dispatch(this.ActionFun('other', text))
+  public bindOther(payload: string) {
+    Store.dispatch(ActionFun('other', payload))
   }
 }
 

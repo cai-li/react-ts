@@ -75,13 +75,6 @@ async function isChanged(prevState: RouterState, nextState: RouterState, replace
 
 // 进入home时
 async function isEnterHome(nextState: RouterState, replace: RedirectFunction): Promise<void> {
-  var reg = /\/home.*/
-  const inhomepage = reg.test(nextState.location.pathname)
-  // 没有通过登录进入home
-  if (!UserService.current && !nextState.location.query.user && inhomepage) {
-    replace('/')
-    return
-  }
 
   try {
     /**
@@ -90,18 +83,25 @@ async function isEnterHome(nextState: RouterState, replace: RedirectFunction): P
     const session = nextState.location.query.user
     if (session === void 0) throw new Error('Session parameter lost.')
 
-    /**
-     * websocket登录(useId存在获取新jwt，登录)
-     */
-    const userInfo = await UserService.refresh(session)
-    if (userInfo === void 0) throw new Error('Auth failed.')
+    const reg = /\/home.*/
+    const inhomepage = reg.test(nextState.location.pathname)
+    // 没有通过登录进入home
+    if (!UserService.current && inhomepage) {
+      if (!session) {
+        replace('/')
+        return
+      } else {
+        /**
+          * websocket登录(useId存在获取新jwt，登录)
+          */
+        const userInfo = await UserService.refresh(session)
+        if (userInfo === void 0) throw new Error('Auth failed.')
 
-    const jwt = await JwtService.loadJwt()
-
-    if (!jwt) {
-      replace('/')
+        if (!await JwtService.loadJwt()) {
+          replace('/')
+        }
+      }
     }
-
   } catch (e) {
     /**
       * 若加载过程发生错误，则清除缓存并返回登录页
@@ -137,7 +137,7 @@ export default () => (
 
       <Route path={RouteDef.hello}
         getComponent={Hello} />
-        
+
       {/* 404 */}
       <Route path="*"
         getComponent={P404} />

@@ -1,14 +1,13 @@
 import * as React from 'react'
-import hashHistory from '../../router/history'
+import hashHistory from 'router/history'
+import { PageMap } from 'router/routerdef'
+import Header from './header/index'
+import './home.less'
 
-interface HelloProps {
-  children?: any
-}
-
-export default class Home extends React.Component<HelloProps, {}> {
+export default class Home extends React.Component<any,any> {
   public state: any
 
-  constructor(props: HelloProps) {
+  constructor(props: any) {
     super(props)
     this.state = null
   }
@@ -19,14 +18,12 @@ export default class Home extends React.Component<HelloProps, {}> {
 
   public render() {
     const { children, location } = this.props
+    console.log(children)
     return (
-      <div className="2">
-        {this.props.children ||
-          <div>
-            主页
-            <button onClick={() => this.toMessage()}>查看详情</button>
-          </div>
-        }
+      <div className="home-wrapper">
+        <Header/>
+        <aside>菜单占位</aside>
+        <main>{children}</main>
       </div>
     )
   }
