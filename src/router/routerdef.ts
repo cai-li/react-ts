@@ -1,21 +1,30 @@
 export const enum RouteDef {
+  // 根
   root = '#',
 
+  // 404
   p404 = '404',
 
+  // home
   home = 'home',
 
+  // 功能列表
   primary = 'primary',
 
+  // 其他
   other = 'other',
 
-  table= 'table',
+  // 表格
+  table = 'table',
 
+  // 图表
   chart = 'chart',
 
-  chat = 'chat',
-
+  // 编辑器
   editor = 'editor',
+
+  // 聊天室
+  chat = 'chat',
 
   // 关于界面
   about = 'about',
@@ -24,7 +33,7 @@ export const enum RouteDef {
   hello = 'hello'
 }
 
-class Page {
+export class Page {
   name: string = ''
   title: string = ''
   children: Page[] = []
@@ -49,7 +58,7 @@ class Page {
   }
 }
 
-const Pages: Page[]= [
+const Pages: Page[] = [
   new Page({
     name: RouteDef.primary,
     title: '功能列表',

@@ -1,4 +1,33 @@
-.home-wrapper{
-  width:100vw;
-  height:100vh;
+@import "~styles/theme";
+.pageHome {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  &>header {
+    height: 60px;
+    flex: 0 0 60px;
+  }
+  .homeMain {
+    flex: 1;
+    display: flex;
+
+    &-pages {
+      flex: 1;
+    }
+
+    &-noPage {
+      .basic-icon();
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-image: url("./asset/leftBg.jpg");
+
+      &--wel {
+        font-size: 36px;
+        color: white;
+      }
+    }
+  }
 }

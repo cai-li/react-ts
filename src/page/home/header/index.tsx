@@ -1,7 +1,9 @@
 import * as React from 'react'
-import { Dropdown, Menu,Icon } from 'antd'
+import { Dropdown, Menu, Icon } from 'antd'
 import './header.less'
 import UserService from 'services/userService'
+import JwtService from 'services/jwtService'
+import hashHistory from 'router/history'
 
 export default class Header extends React.Component {
   public state: any
@@ -11,26 +13,19 @@ export default class Header extends React.Component {
     this.state = {
       visible: false
     }
-    this.hide = this.hide.bind(this)
-    this.handleVisibleChange = this.handleVisibleChange.bind(this)
   }
 
-  private get user(){
+  private get user() {
     return UserService.current
   }
 
-  private hide() {
-    this.setState({
-      visible: false
-    })
-  }
-
-  private handleVisibleChange(visible: boolean) {
-    this.setState({ visible });
+  private async logout(): Promise<void> {
+    await UserService.logout()
+    await JwtService.clearJwt()
+    hashHistory.push('/')
   }
 
   public render() {
-    console.log(this.user)
     const menu = (
       <Menu className="setting-menu">
         <Menu.Item key="0">
@@ -40,7 +35,9 @@ export default class Header extends React.Component {
           <p>修改密码</p>
         </Menu.Item>
         <Menu.Divider />
-        <Menu.Item key="3">退出</Menu.Item>
+        <Menu.Item key="3">
+          <p onClick={() => this.logout()}>退出</p>
+        </Menu.Item>
       </Menu>
     );
 

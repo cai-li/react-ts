@@ -8,6 +8,89 @@ import UserService from 'services/userService'
 import { RouteDef } from './routerdef'
 import { When } from 'utils/common'
 
+/**
+ * 路由链接携带query，为userID
+ * 
+ * @param {RouterState} state 
+ * @returns 
+ */
+function trustedRoute(state: RouterState) {
+  const query = UserService.current ? { user: UserService.current.id } : void 0
+  return {
+    pathname: state.location.pathname,
+    query
+  }
+}
+
+async function backLogin(replace: RedirectFunction) {
+  await CacheService.clear()
+  CacheService.close()
+  replace('/')  
+}
+
+/**
+ * home内路由发生变化
+ * 
+ * @param {RouterState} prevState 
+ * @param {RouterState} nextState 
+ * @param {RedirectFunction} replace 
+ */
+async function isChanged(prevState: RouterState, nextState: RouterState, replace: RedirectFunction) {
+  try {
+    if (UserService.current) {
+      // 登录页面内，当手动输入url时路由跳转
+      if (prevState.location.pathname !== '/' && nextState.location.query.user !== UserService.current.id) {
+        replace(trustedRoute(nextState))
+      }
+    }
+  } catch (e) {
+    /**
+     * 若加载过程发生错误，则清除缓存并返回登录页
+     */
+    backLogin(replace)
+  }
+}
+
+/**
+ * 路由进入Home时
+ * 
+ * @param {RouterState} nextState 
+ * @param {RedirectFunction} replace 
+ * @returns {Promise<void>} 
+ */
+async function isEnterHome(nextState: RouterState, replace: RedirectFunction): Promise<void> {
+  try {
+    /**
+     * 用户会话识别
+     */
+    const session = nextState.location.query.user
+    const reg = /\/home.*/
+    const inhomepage = reg.test(nextState.location.pathname)
+    // 没有通过登录进入home
+    if (!UserService.current && inhomepage) {
+      if (!session) {
+        hashHistory.push('/')
+        return
+      } else {
+        /**
+         * websocket登录(useId存在获取新jwt，登录)
+         */
+        const userInfo = await UserService.refresh(session)
+        if (userInfo === void 0) throw new Error('Auth failed.')
+
+        if (!await JwtService.loadJwt()) {
+          backLogin(replace)
+        }
+      }
+    }
+  } catch (e) {
+    /**
+     * 若加载过程发生错误，则清除缓存并返回登录页
+     */
+    backLogin(replace)
+  }
+}
+
 const P404 = (location: any, cb: any) => {
   require.ensure([], (require: NodeRequire) => {
     cb(null, require("../page/404/index").default);
@@ -20,97 +103,40 @@ const Login = (location: any, cb: any) => {
   }, () => { }, 'login')
 }
 
-const About = (location: any, cb: any) => {
-  require.ensure([], (require: NodeRequire) => {
-    cb(null, require("../page/about/index").default);
-  }, () => { }, 'about')
-}
-
-const Hello = (location: any, cb: any) => {
-  require.ensure([], (require: NodeRequire) => {
-    cb(null, require("../page/hello").default);
-  }, () => { }, 'hello')
-}
-
 const Home = (location: any, cb: any) => {
   require.ensure([], (require: NodeRequire) => {
     cb(null, require("../page/home/index").default);
   }, () => { }, 'home')
 }
 
-const Message = (location: any, cb: any) => {
+const Table = (location: any, cb: any) => {
   require.ensure([], (require: NodeRequire) => {
-    cb(null, require("../page/message/message").default);
-  }, () => { }, 'message')
+    cb(null, require("../page/table/index").default);
+  }, () => { }, 'table')
 }
 
-function trustedRoute(state: RouterState) {
-  const query = UserService.current ? { user: UserService.current.id } : void 0
-  return {
-    pathname: state.location.pathname,
-    query
-  }
+const Chart = (location: any, cb: any) => {
+  require.ensure([], (require: NodeRequire) => {
+    cb(null, require("../page/chart/index").default);
+  }, () => { }, 'chart')
 }
 
-// url发生变化
-async function isChanged(prevState: RouterState, nextState: RouterState, replace: RedirectFunction) {
-  try {
-    if (UserService.current) {
-      // 从登录页面进入
-      if (prevState.location.pathname === '/') {
-        console.log(10)
-      } else if (nextState.location.query.user !== UserService.current.id) {
-        replace(trustedRoute(nextState))
-      }
-    }
-  } catch (e) {
-    /**
-     * 若加载过程发生错误，则清除缓存并返回登录页
-     */
-    await CacheService.clear()
-    CacheService.close()
-    replace('/')
-  }
+const Chat = (location: any, cb: any) => {
+  require.ensure([], (require: NodeRequire) => {
+    cb(null, require("../page/chat/index").default);
+  }, () => { }, 'chat')
 }
 
-// 进入home时
-async function isEnterHome(nextState: RouterState, replace: RedirectFunction): Promise<void> {
+const Editor = (location: any, cb: any) => {
+  require.ensure([], (require: NodeRequire) => {
+    cb(null, require("../page/editor/index").default);
+  }, () => { }, 'editor')
+}
 
-  try {
-    /**
-      * 用户会话识别
-      */
-    const session = nextState.location.query.user
-    if (session === void 0) throw new Error('Session parameter lost.')
-
-    const reg = /\/home.*/
-    const inhomepage = reg.test(nextState.location.pathname)
-    // 没有通过登录进入home
-    if (!UserService.current && inhomepage) {
-      if (!session) {
-        replace('/')
-        return
-      } else {
-        /**
-          * websocket登录(useId存在获取新jwt，登录)
-          */
-        const userInfo = await UserService.refresh(session)
-        if (userInfo === void 0) throw new Error('Auth failed.')
-
-        if (!await JwtService.loadJwt()) {
-          replace('/')
-        }
-      }
-    }
-  } catch (e) {
-    /**
-      * 若加载过程发生错误，则清除缓存并返回登录页
-      */
-    await CacheService.clear()
-    CacheService.close()
-    replace('/')
-  }
-
+const Hello = (location: any, cb: any) => {
+  require.ensure([], (require: NodeRequire) => {
+    cb(null, require("../page/hello").default);
+  }, () => { }, 'hello')
 }
 
 export default () => (
@@ -120,23 +146,26 @@ export default () => (
       {/* 登录 */}
       <IndexRoute getComponent={Login} />
       {/* home */}
-      <Route path={RouteDef.home}
+      <Route path={`/${RouteDef.home}`}
         getComponent={Home}
         onChange={isChanged}
         onEnter={isEnterHome}>
-        {/* 关于我们 */}
-        <Route path={RouteDef.about}
-          getComponent={About} />
-        {/* 消息中心 */}
-        <Route path="messages/:id"
-          getComponent={Message} />
-        <Route path="messages/:id"
-          getComponent={Message}
-          onEnter={({ params }: any, replace: any) => replace(`/messages/${params.id}`)} />
-      </Route>
+        {/* 表格 */}
+        <Route path={RouteDef.table}
+          getComponent={Table} />
 
-      <Route path={RouteDef.hello}
-        getComponent={Hello} />
+        {/* 图表 */}
+        <Route path={RouteDef.chart}
+          getComponent={Chart} />
+
+        {/* 编辑器 */}
+        <Route path={RouteDef.editor}
+          getComponent={Editor} />
+
+        {/* 聊天室 */}
+        <Route path={RouteDef.chat}
+          getComponent={Chat} />
+      </Route>
 
       {/* 404 */}
       <Route path="*"

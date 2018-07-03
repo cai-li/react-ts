@@ -60,7 +60,7 @@ module.exports = {
           transpileOnly: true,
           getCustomTransformers: () => ({
             before: [tsImportPluginFactory({ libraryName: "antd", style: true })]
-          }), // antd按需引入的配置 ，style设置为true是为了样式按需引入
+          }), // antd按需引入的配置 ，style设置为true是为了样式主题自定义
           compilerOptions: {
             module: 'es2015'
           }
