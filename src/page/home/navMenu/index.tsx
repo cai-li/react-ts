@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { Menu, Icon, Button } from 'antd'
 import { ClickParam } from 'antd/lib/menu'
-import './navMenu.less'
 import { PageMap, Page } from 'router/routerdef'
 import hashHistory from 'router/history'
 import UserService from 'services/userService'
+import './navMenu.less'
 
 const SubMenu = Menu.SubMenu
 
@@ -28,15 +28,15 @@ export default class NavMenu extends React.Component<NavMenuProps, any> {
   }
 
   private get calNavClass(): string {
-    return this.state.collapsed ? "navMenu navMenu-mini" : "navMenu"
+    return this.state.collapsed ? 'navMenu navMenu-mini' : 'navMenu'
   }
 
   private iconType(openKey: string): string {
     switch (openKey) {
       case 'primary':
-        return 'appstore';
+        return 'appstore'
       case 'other':
-        return 'setting';
+        return 'setting'
     }
   }
 
@@ -55,7 +55,7 @@ export default class NavMenu extends React.Component<NavMenuProps, any> {
   }
 
   private onOpenChange(openKeys: string[]) {
-    const latestOpenKey = openKeys.find(key => this.state.openKeys.indexOf(key) === -1);
+    const latestOpenKey = openKeys.find((key) => this.state.openKeys.indexOf(key) === -1);
     if (this.rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
       this.setState({ openKeys });
     } else {
@@ -74,7 +74,7 @@ export default class NavMenu extends React.Component<NavMenuProps, any> {
 
   private calNavMenus(): React.ReactNode {
     return this.pageMap && this.pageMap.map((page, index) => {
-      if (page.children) {
+      if (page.children.length > 0) {
         return <SubMenu
           key={page.name}
           title={<span><Icon type={this.iconType(page.name)} /><span>{page.title}</span></span>}>
@@ -110,7 +110,7 @@ export default class NavMenu extends React.Component<NavMenuProps, any> {
           theme="dark"
           inlineCollapsed={this.state.collapsed}
           selectedKeys={selectedKeys}
-          onClick={(ClickParam) => this.navOnClick(ClickParam)}
+          onClick={(clickParam) => this.navOnClick(clickParam)}
           openKeys={this.state.openKeys}
           onOpenChange={(openKeys) => this.onOpenChange(openKeys)}
         >

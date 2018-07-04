@@ -10,30 +10,30 @@ import { When } from 'utils/common'
 
 /**
  * 路由链接携带query，为userID
- * 
- * @param {RouterState} state 
- * @returns 
+ *
+ * @param {RouterState} state
+ * @returns
  */
 function trustedRoute(state: RouterState) {
   const query = UserService.current ? { user: UserService.current.id } : void 0
   return {
     pathname: state.location.pathname,
-    query
+    query,
   }
 }
 
 async function backLogin(replace: RedirectFunction) {
   await CacheService.clear()
   CacheService.close()
-  replace('/')  
+  replace('/')
 }
 
 /**
  * home内路由发生变化
- * 
- * @param {RouterState} prevState 
- * @param {RouterState} nextState 
- * @param {RedirectFunction} replace 
+ *
+ * @param {RouterState} prevState
+ * @param {RouterState} nextState
+ * @param {RedirectFunction} replace
  */
 async function isChanged(prevState: RouterState, nextState: RouterState, replace: RedirectFunction) {
   try {
@@ -53,10 +53,10 @@ async function isChanged(prevState: RouterState, nextState: RouterState, replace
 
 /**
  * 路由进入Home时
- * 
- * @param {RouterState} nextState 
- * @param {RedirectFunction} replace 
- * @returns {Promise<void>} 
+ *
+ * @param {RouterState} nextState
+ * @param {RedirectFunction} replace
+ * @returns {Promise<void>}
  */
 async function isEnterHome(nextState: RouterState, replace: RedirectFunction): Promise<void> {
   try {
@@ -93,49 +93,49 @@ async function isEnterHome(nextState: RouterState, replace: RedirectFunction): P
 
 const P404 = (location: any, cb: any) => {
   require.ensure([], (require: NodeRequire) => {
-    cb(null, require("../page/404/index").default);
+    cb(null, require('../page/404/index').default)
   }, () => { }, '404')
 }
 
 const Login = (location: any, cb: any) => {
   require.ensure([], (require: NodeRequire) => {
-    cb(null, require("../page/login/index").default);
+    cb(null, require('../page/login/index').default)
   }, () => { }, 'login')
 }
 
 const Home = (location: any, cb: any) => {
   require.ensure([], (require: NodeRequire) => {
-    cb(null, require("../page/home/index").default);
+    cb(null, require('../page/home/index').default)
   }, () => { }, 'home')
 }
 
 const Table = (location: any, cb: any) => {
   require.ensure([], (require: NodeRequire) => {
-    cb(null, require("../page/table/index").default);
+    cb(null, require('../page/table/index').default)
   }, () => { }, 'table')
 }
 
 const Chart = (location: any, cb: any) => {
   require.ensure([], (require: NodeRequire) => {
-    cb(null, require("../page/chart/index").default);
+    cb(null, require('../page/chart/index').default)
   }, () => { }, 'chart')
 }
 
 const Chat = (location: any, cb: any) => {
   require.ensure([], (require: NodeRequire) => {
-    cb(null, require("../page/chat/index").default);
+    cb(null, require('../page/chat/index').default)
   }, () => { }, 'chat')
 }
 
 const Editor = (location: any, cb: any) => {
   require.ensure([], (require: NodeRequire) => {
-    cb(null, require("../page/editor/index").default);
+    cb(null, require('../page/editor/index').default)
   }, () => { }, 'editor')
 }
 
 const Hello = (location: any, cb: any) => {
   require.ensure([], (require: NodeRequire) => {
-    cb(null, require("../page/hello").default);
+    cb(null, require('../page/hello').default)
   }, () => { }, 'hello')
 }
 
@@ -165,6 +165,9 @@ export default () => (
         {/* 聊天室 */}
         <Route path={RouteDef.chat}
           getComponent={Chat} />
+
+        <Route path={RouteDef.hello}
+          getComponent={Hello} />
       </Route>
 
       {/* 404 */}

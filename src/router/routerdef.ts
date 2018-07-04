@@ -29,29 +29,29 @@ export const enum RouteDef {
   // 关于界面
   about = 'about',
 
-  //
-  hello = 'hello'
+  // demo1
+  hello = 'hello',
 }
 
 export class Page {
-  name: string = ''
-  title: string = ''
-  children: Page[] = []
-  parent: Page = null
-  level: number = 0
+  public name: string = ''
+  public title: string = ''
+  public children: Page[] = []
+  public parent: Page = null
+  public level: number = 0
 
   constructor(row: any) {
     Object.assign(this, row)
   }
 
-  static get root(): Page {
+  private static get root(): Page {
     return new Page({
       name: RouteDef.root,
-      title: ''
+      title: '',
     })
   }
 
-  traverseLink(root: Page = Page.root) {
+  public traverseLink(root: Page = Page.root) {
     this.parent = root
     this.level = root.level + 1
     this.children.forEach((page: Page) => page.traverseLink(this))
@@ -86,7 +86,11 @@ const Pages: Page[] = [
         title: '聊天室',
       }),
     ]
-  })
+  }),
+  new Page({
+    name: RouteDef.hello,
+    title: 'hello',
+  }),
 ]
 
 Pages.map((page: Page) => page.traverseLink())

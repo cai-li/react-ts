@@ -9,14 +9,14 @@ import './home.less'
 export default class Home extends React.Component<RouteComponentProps<any, any>, any> {
   public state: any
 
-  constructor(props: any) {
+  constructor(props: RouteComponentProps<any, any>) {
     super(props)
     this.state = null
   }
 
   private calHomeClass(): string {
-    let className = "homeMain-pages"
-    if (!this.props.children) className += " homeMain-noPage"
+    let className = 'homeMain-pages'
+    if (!this.props.children) className += ' homeMain-noPage'
     return className
   }
 
@@ -28,8 +28,7 @@ export default class Home extends React.Component<RouteComponentProps<any, any>,
         <main className="homeMain">
           <NavMenu pathname={location.pathname}></NavMenu>
           <main className={this.calHomeClass()}>
-            {!children && <h1 className="homeMain-noPage--wel">welcome !</h1>}
-            {children}
+            {!children ? <h1 className="homeMain-noPage--wel">welcome !</h1> : children}
           </main>
         </main>
       </div>

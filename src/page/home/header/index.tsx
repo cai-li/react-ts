@@ -11,7 +11,7 @@ export default class Header extends React.Component {
   constructor(props: any) {
     super(props)
     this.state = {
-      visible: false
+      visible: false,
     }
   }
 
