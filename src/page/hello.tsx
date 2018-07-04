@@ -11,7 +11,7 @@ export default class Hello extends React.Component<HelloProps, HelloState> {
     super(props)
     this.state = {
       todos: [
-        { text: 'caili', completed: false }
+        { text: 'caili', completed: false },
       ],
       visibilityFilter: '',
     }
