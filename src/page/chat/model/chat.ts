@@ -19,4 +19,5 @@ export interface ChatState {
   users: User[]
   recordList: Record[]
   count: number
+  showIm: boolean
 }

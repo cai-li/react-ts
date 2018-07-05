@@ -48,7 +48,8 @@ export default class NavMenu extends React.Component<NavMenuProps, any> {
     })
   }
 
-  private toggleCollapsed() {
+  private toggleCollapsed(e: Event) {
+    e.stopPropagation()
     this.setState({
       collapsed: !this.state.collapsed,
     });
@@ -100,7 +101,7 @@ export default class NavMenu extends React.Component<NavMenuProps, any> {
 
     return (
       <aside className={this.calNavClass}>
-        <div className="navMenu-switch" onClick={() => this.toggleCollapsed()}>
+        <div className="navMenu-switch" onClick={(e: any) => this.toggleCollapsed(e)}>
           <Icon type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'} />
         </div>
 

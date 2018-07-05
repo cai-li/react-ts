@@ -4,6 +4,7 @@ import { DatePicker } from 'antd'
 import Routes from './router/index'
 import { Provider } from 'react-redux'
 import Store from './store/index'
+import 'styles/base.less'
 
 ReactDOM.render(
   <Provider store={Store}>

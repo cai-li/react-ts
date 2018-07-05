@@ -33,7 +33,7 @@ class Login extends React.Component<FormComponentProps, any> {
   }
 
   public render() {
-    const { getFieldDecorator } = this.props.form;
+    const { getFieldDecorator } = this.props.form
     return (
       <div className="pageLogin">
         <header>
@@ -82,4 +82,4 @@ class Login extends React.Component<FormComponentProps, any> {
   }
 }
 
-export default Form.create()(Login);
+export default Form.create()(Login)
