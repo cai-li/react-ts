@@ -2,6 +2,8 @@ import * as React from 'react'
 import './chat.less'
 import { Input, Icon, List, Avatar, Dropdown, Button } from 'antd'
 import { ChatState, Record, User } from './model/chat'
+import WsService from 'services/wsService'
+import UserService from 'services/userService'
 
 const res = [
   {
@@ -21,7 +23,7 @@ const res = [
   },
 ]
 
-export default class Chat extends React.Component<ChatState> {
+export default class Chat extends React.Component<any, ChatState> {
   public state: ChatState
 
   constructor(props: any) {
@@ -129,6 +131,21 @@ export default class Chat extends React.Component<ChatState> {
 
   private handleSubmit(e: Event) {
 
+  }
+
+  private async loadChat(): Promise<any> {
+    WsService.connect()
+    // try {
+    //   const res = await WsService.send('enterChat', UserService.current.username)
+    //   console.log(res)
+    // } catch (e) {
+    //   console.log('错误', e)
+    // } finally {
+    // }
+  }
+
+  public componentDidMount() {
+    this.loadChat()
   }
 
   /**

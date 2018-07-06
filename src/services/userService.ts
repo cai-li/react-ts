@@ -16,7 +16,7 @@ class UserService {
   }
 
   public async login(username: string, password: string): Promise<User> {
-    this.user = new User(await WsService.connect(username,password))
+    this.user = new User(await WsService.login(username,password))
     return this.user
   }
 

@@ -4,13 +4,13 @@ let express = require('express'),
   io = require('socket.io').listen(server),
   users = [];
 
-var PORT = process.env.PORT || 1111
+var PORT = process.env.PORT || 4848
 server.listen(PORT, function () { console.log('listen at ' + PORT) });
 
 // handle the socket
 io.sockets.on('connection', function (socket) {
-  // new user login
-  socket.on('login', function (nickname) {
+  // new user enterChat
+  socket.on('enterChat', function (nickname) {
     if (users.indexOf(nickname) > -1) {
       socket.emit('nickExisted', nickname, users);
     } else {
