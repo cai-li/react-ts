@@ -34,9 +34,11 @@ export default class NavMenu extends React.Component<NavMenuProps, any> {
   private iconType(openKey: string): string {
     switch (openKey) {
       case 'primary':
-        return 'appstore'
+        return 'home'
       case 'other':
-        return 'setting'
+        return 'team'
+      case 'hello':
+        return 'smile-o'
     }
   }
 
@@ -56,13 +58,13 @@ export default class NavMenu extends React.Component<NavMenuProps, any> {
   }
 
   private onOpenChange(openKeys: string[]) {
-    const latestOpenKey = openKeys.find((key) => this.state.openKeys.indexOf(key) === -1);
+    const latestOpenKey = openKeys.find((key) => this.state.openKeys.indexOf(key) === -1)
     if (this.rootSubmenuKeys.indexOf(latestOpenKey) === -1) {
-      this.setState({ openKeys });
+      this.setState({ openKeys })
     } else {
       this.setState({
         openKeys: latestOpenKey ? [latestOpenKey] : [],
-      });
+      })
     }
   }
 
@@ -71,6 +73,31 @@ export default class NavMenu extends React.Component<NavMenuProps, any> {
       pathname: `/home/${param.key}`,
       query: { user: UserService.current.id }
     })
+  }
+
+  private get nowPageName() {
+    const { pathname } = this.props
+    const navName = /^\/home\/([a-z]+)$/.exec(pathname)
+    return !navName ? null : navName[1]
+  }
+
+  private initOpenKeys() {
+
+    const navParentPage = this.pageMap.find((page) => {
+      if (page.children.length > 0 && this.nowPageName) {
+        return page.children.some((child) => {
+          return child.name === this.nowPageName
+        })
+      }
+    })
+
+    this.setState({
+      openKeys: !navParentPage ? [] : [navParentPage.name],
+    })
+  }
+
+  public componentDidMount() {
+    this.initOpenKeys()
   }
 
   private calNavMenus(): React.ReactNode {
@@ -95,9 +122,7 @@ export default class NavMenu extends React.Component<NavMenuProps, any> {
   }
 
   public render() {
-    const { pathname } = this.props
-    const navName = /^\/home\/([a-z]+)$/.exec(pathname)
-    const selectedKeys: string[] = !navName ? [] : [navName[1]]
+    const selectedKeys: string[] = !this.nowPageName ? [] : [this.nowPageName]
 
     return (
       <aside className={this.calNavClass}>
