@@ -1,8 +1,4 @@
-export interface User {
-  id: string
-  username: string
-  online: boolean
-}
+import User from 'model/user'
 
 export interface Record {
   id: string

@@ -7,6 +7,7 @@ let express = require('express'),
 var PORT = process.env.PORT || 4848
 server.listen(PORT, function () { console.log('listen at ' + PORT) });
 
+console.log('初始')
 // handle the socket
 io.sockets.on('connection', function (socket) {
   // new user enterChat
@@ -17,12 +18,13 @@ io.sockets.on('connection', function (socket) {
       // socket.userIndex = users.length;
       socket.nickname = nickname;
       users.push(nickname);
-      socket.emit('loginSuccess', nickname, users);
+      socket.emit('enterChatSuccess', nickname, users);
       io.sockets.emit('system', nickname, users, 'login');
     }
   });
   // user leaves
   socket.on('disconnect', function () {
+
     if (socket.nickname != null) {
       // users.splice(socket.userIndex, 1);
       users.splice(users.indexOf(socket.nickname), 1);
@@ -30,12 +32,11 @@ io.sockets.on('connection', function (socket) {
     }
   });
   // new message get
-  socket.on('postMsg', function (msg, color) {
-    console.log(msg)
-    socket.broadcast.emit('newMsg', socket.nickname, msg, color);
+  socket.on('postMsg', function (msg) {
+    socket.broadcast.emit('newMsg', socket.nickname, msg);
   });
   // new image get
-  socket.on('img', function (imgData, color) {
-    socket.broadcast.emit('newImg', socket.nickname, imgData, color);
+  socket.on('postImg', function (imgData) {
+    socket.broadcast.emit('newImg', socket.nickname, imgData);
   });
 });
