@@ -1,6 +1,6 @@
 import * as React from 'react'
-import './editor.less'
 import { RouteComponentProps } from 'react-router'
+import './editor.less'
 
 export default class Editor extends React.Component<RouteComponentProps<any,any,any>,any>{
   public state: any

@@ -19,14 +19,16 @@ class WsService {
   public async login(username: string, password: string): Promise<any> {
 
     // todo 请求数据的主体暂时忽略，上顶死数据
-    const user = new User({
-      username,
-      password
+    const user: User = await new Promise((resolve, reject) => {
+      resolve(new User({
+        username,
+        password,
+      }))
     })
 
     const jwt = 'kerii34234234mdfk8s99dssf'
 
-    CacheService.open(user.id)
+    await CacheService.open(user.id)
     await JwtService.saveJwt(jwt)
 
     return user

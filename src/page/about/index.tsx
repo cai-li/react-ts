@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { browserHistory } from 'react-router'
-import Store from '../../store/index'
+import { Button } from 'antd'
+import Store from 'store/index'
 import './about.less'
-import { Button } from "antd"
 
 export default class About extends React.Component {
   public state: any

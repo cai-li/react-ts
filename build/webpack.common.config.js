@@ -94,7 +94,6 @@ module.exports = {
             {
               loader: 'less-loader',
               options: {
-                sourceMap: true,
                 modules: false,
                 modifyVars: theme,
               }

@@ -1,8 +1,8 @@
 import * as React from 'react'
-import './hello.less'
-import Store from '../store/index'
+import Store from 'store/index'
 import HelloAction, { HelloProps, HelloState, ItemTodo } from 'store/helloAction'
 import { Button } from 'antd'
+import './hello.less'
 
 export default class Hello extends React.Component<HelloProps, HelloState> {
   public state: HelloState
@@ -21,7 +21,7 @@ export default class Hello extends React.Component<HelloProps, HelloState> {
     HelloAction.bindAddTodo('张山')
   }
 
-  private filterChanged(e: any) {
+  private filterChanged(e: React.ChangeEvent<HTMLInputElement>) {
     HelloAction.bindFilter(e.target.value)
   }
 
@@ -43,7 +43,9 @@ export default class Hello extends React.Component<HelloProps, HelloState> {
 
     return (
       <div className="hello">
-        <input type="text" value={visibilityFilter} onChange={(e) => this.filterChanged(e)} />
+        <input type="text"
+          value={visibilityFilter}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => this.filterChanged(e)} />
 
         <div className="greeting">
           {todos && todos.map((todo, index) => {

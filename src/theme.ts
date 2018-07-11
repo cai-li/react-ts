@@ -1,6 +1,6 @@
-const themeBaseBlack = '#1f2b36';
+const themeBaseBlack = '#1f2b36'
 module.exports = function () {
   return {
-    "@layout-header-background":themeBaseBlack,
-  };
-};
+    '@layout-header-background': themeBaseBlack,
+  }
+}

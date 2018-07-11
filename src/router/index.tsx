@@ -1,12 +1,12 @@
 import * as React from 'react'
 import { Router, Route, IndexRoute, RouterState, RedirectFunction } from 'react-router'
 import hashHistory from './history'
-import App from 'app'
+import { When } from 'utils/common'
 import JwtService from 'services/jwtService'
 import CacheService from 'services/cacheService'
 import UserService from 'services/userService'
 import { RouteDef } from './routerdef'
-import { When } from 'utils/common'
+import App from 'app'
 
 /**
  * 路由链接携带query，为userID

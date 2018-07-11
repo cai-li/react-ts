@@ -1,11 +1,11 @@
 import * as React from 'react'
 
 interface propsType {
-  params?:any
-  [name:string]:any
+  params?: any
+  [name: string]: any
 }
 
-export default class Page404 extends React.Component<propsType,{}>{
+export default class Page404 extends React.Component<propsType, {}>{
   public state: any
 
   constructor(props: any) {

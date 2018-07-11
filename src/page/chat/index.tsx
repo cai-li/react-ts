@@ -1,10 +1,10 @@
 import * as React from 'react'
-import './chat.less'
 import { Input, Icon, List, Avatar, Dropdown, Button } from 'antd'
-import { ChatState, Record } from './model/chat'
+import User from 'model/user'
 import ChatService from 'services/chatService'
 import UserService from 'services/userService'
-import User from 'model/user'
+import { ChatState, Record } from './typeModel/chat'
+import './chat.less'
 
 const res = [
   {
@@ -106,7 +106,8 @@ export default class Chat extends React.Component<any, ChatState> {
    * @memberof Chat
    */
   private get usersTem() {
-    return res.filter((user: User) => user.username.includes(this.state.filter))
+    console.log(ChatService.chatUsers)
+    return ChatService.chatUsers.filter((user: User) => user.username.includes(this.state.filter))
   }
 
   /**
@@ -117,7 +118,7 @@ export default class Chat extends React.Component<any, ChatState> {
    * @memberof Chat
    */
   private get onLineUser() {
-    return res.filter((user: User) => user.online)
+    return ChatService.chatUsers.filter((user: User) => user.online)
   }
 
   private filterChanged(filter: string) {
@@ -127,11 +128,13 @@ export default class Chat extends React.Component<any, ChatState> {
   }
 
   private handleClear() {
-
+    // todo
+    const k = 'todo'
   }
 
   private handleSubmit(e: Event) {
-
+    // todo
+    const k = 'todo'
   }
 
   private async loadChat(): Promise<any> {
@@ -168,7 +171,7 @@ export default class Chat extends React.Component<any, ChatState> {
 
   public render() {
     const { filter, recordList } = this.state
-
+    console.log(this.onLineUser)
     return (
       <div className="pageChat">
         {/* 用户列表 */}

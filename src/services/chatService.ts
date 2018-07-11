@@ -1,11 +1,16 @@
 import * as io from 'socket.io-client'
 import User from 'model/user'
 
+/**
+ * 由于缺乏真正的数据库，无法通过用户id作为唯一键值
+ * 
+ * @class ChatService
+ */
 class ChatService {
   private ws: SocketIOClient.Socket = null
   public chatUsers: User[] = []
 
-  public async connect() {
+  public async connect(): Promise<void> {
     // todo 需要根据开发环境隐射对应服务ip
     const url = location.hostname
     this.ws = io(`http://${url}:4848/`)
@@ -14,8 +19,12 @@ class ChatService {
     this.ws.on('connect', () => console.log('连接web服务器成功'))
 
     // 进入聊天室
-    this.ws.on('enterChatSuccess', (nickName: string, users: any) => {
+    this.ws.on('enterChatSuccess', (nickName: string, users: string[]) => {
       console.log('进入聊天室:', users)
+      this.chatUsers = users.map((user) => new User({
+        username: user,
+        online: true,
+      }))
     })
 
     // 系统消息
@@ -42,11 +51,12 @@ class ChatService {
   /**
    * 进入聊天室
    *
-   * @param {string} nickname
+   * @param {string} user
    * @memberof ChatService
    */
-  public async enterChat(nickname: string) {
-    this.emitHandle('enterChat', nickname)
+  public async enterChat(user: string) {
+    this.emitHandle('enterChat', user)
+    return this.chatUsers
   }
 
   /**
@@ -56,6 +66,7 @@ class ChatService {
    */
   public async leaveChat() {
     this.ws.disconnect()
+    this.chatUsers = []
   }
 
   /**

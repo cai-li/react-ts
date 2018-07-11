@@ -2,9 +2,14 @@ import { combineReducers, AnyAction} from 'redux'
 
 import { ADD_TODO, TOGGLE_TODO, SET_VISIBILITY_FILTER } from './helloAction'
 
+interface ItemTodo {
+  text: string
+  completed: boolean
+}
+
 const initialState = {
   todos: [
-    { text: 'caili', completed: false }
+    { text: 'caili', completed: false },
   ],
   visibilityFilter: '',
 }
@@ -27,8 +32,8 @@ function todos(state: ItemTodo[] = initialState.todos, action: AnyAction) {
         ...state,
         {
           text: payload,
-          completed: false
-        }
+          completed: false,
+        },
       ]
     case TOGGLE_TODO:
       return state.map((item, index) =>

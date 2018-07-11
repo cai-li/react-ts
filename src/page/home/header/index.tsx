@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { Dropdown, Menu, Icon } from 'antd'
-import './header.less'
 import UserService from 'services/userService'
 import JwtService from 'services/jwtService'
 import hashHistory from 'router/history'
+import './header.less'
 
 export default class Header extends React.Component {
   public state: any
