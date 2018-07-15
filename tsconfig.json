@@ -20,9 +20,9 @@
     "noLib": false,
     "preserveConstEnums": true,
     "suppressImplicitAnyIndexErrors": true,
-    "baseUrl": "src"
-  },
-  "include": [
-    "./src/**/*"
-  ]
+    "typeRoots": [
+      "typings", "node_modules/@types"
+    ],// type路径查找包括typings和。。。
+    "baseUrl": "src" // 解析非相对模块名的基准目录
+  } 
 }

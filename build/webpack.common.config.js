@@ -7,6 +7,7 @@ const tsImportPluginFactory = require('ts-import-plugin')
 
 const isLocal = process.env.NODE_ENV === 'local'
 const isDevelop = process.env.NODE_ENV === 'develop'
+const isProduction = process.env.NODE_ENV === 'production'
 
 function resolve(relatedPath) {
   return path.join(__dirname, relatedPath)
@@ -30,7 +31,7 @@ if (pkg.theme && typeof pkg.theme === 'string') {
   theme = pkg.theme
 }
 
-module.exports = {
+var config = {
   entry: {
     app: resolve('../src/index.tsx'),
   },
@@ -132,5 +133,17 @@ module.exports = {
       inject: 'body',
       favicon: resolve('../src/asset/favicon.ico') // 容易被缓存干扰
     }),
+    new webpack.DefinePlugin({
+      DEBUG: true
+    }),
   ],
 };
+
+if(isProduction){
+  config.plugins.push(new webpack.DefinePlugin({
+    'process.env': {NODE_ENV: '"production"'},
+    DEBUG: false
+  }));
+}
+
+module.exports = config
