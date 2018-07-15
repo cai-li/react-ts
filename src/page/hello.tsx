@@ -1,45 +1,51 @@
 import * as React from 'react'
-import Store from 'store/index'
-import HelloAction, { HelloProps, HelloState, ItemTodo } from 'store/helloAction'
+import { connect } from 'react-redux'
+import { Dispatch } from 'redux'
+import { StoreState } from 'store/storeState'
+import {
+  GetVisibilityFilterAction, GetAddTodoAction, GetToggleTodoAction,
+} from 'actionCreators/helloActionCreator'
 import { Button } from 'antd'
 import './hello.less'
 
-export default class Hello extends React.Component<HelloProps, HelloState> {
-  public state: HelloState
-  private unsubscribe: any
-  constructor(props: HelloProps) {
+interface ItemTodo {
+  text: string
+  completed: boolean
+}
+
+interface HelloProp {
+  todos?: ItemTodo[],
+  visibilityFilter?: string,
+
+  filterVisibility?: (visibilityFilter: string) => void,
+  addTodo?: (text: string, completed: boolean) => void,
+  toggleTodo?: (toggoleTodoIndex: number) => void,
+  [type: string]: any,
+}
+
+@connect(mapStateToProps, mapDispatchToProps)
+class Hello extends React.Component<HelloProp, {}> {
+  public state: any
+  constructor(props: HelloProp) {
     super(props)
-    this.state = {
-      todos: [
-        { text: 'caili', completed: false },
-      ],
-      visibilityFilter: '',
-    }
   }
 
   private fetchCounter1() {
-    HelloAction.bindAddTodo('张山')
+    this.props.addTodo('张山', false)
   }
 
   private filterChanged(e: React.ChangeEvent<HTMLInputElement>) {
-    HelloAction.bindFilter(e.target.value)
+    this.props.filterVisibility(e.target.value)
   }
 
-  public componentDidMount() {
-    this.unsubscribe = Store.subscribe(() => {
-      this.setState(Store.getState())
-    })
-  }
-
-  public componentWillUnmount() {
-    this.unsubscribe()
+  private toggleTodo() {
+    if(this.props.todos.length === 0) return
+    this.props.toggleTodo(0)
   }
 
   public render() {
-    let { todos, visibilityFilter } = this.state
-    if (this.state) {
-      todos = todos.filter((todo) => todo.text.includes(visibilityFilter))
-    }
+    const { todos, visibilityFilter } = this.props
+    const todosFilted = todos.filter((todo) => todo.text.includes(visibilityFilter))
 
     return (
       <div className="hello">
@@ -48,16 +54,33 @@ export default class Hello extends React.Component<HelloProps, HelloState> {
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => this.filterChanged(e)} />
 
         <div className="greeting">
-          {todos && todos.map((todo, index) => {
+          {todosFilted && todosFilted.map((todo, index) => {
             return <div key={index}>{`${todo.text}--${todo.completed}`}</div>
           })}
         </div>
 
         <div className="buttonGroup">
           <Button onClick={() => this.fetchCounter1()}>dispatch</Button>
-          <Button type="primary">Dashed</Button>
+          <Button type="primary" onClick={() => this.toggleTodo()}>toggleTodo</Button>
         </div>
       </div>
     )
   }
 }
+
+function mapStateToProps(state: StoreState): HelloProp {
+  return {
+    todos: state.helloCount.todos,
+    visibilityFilter: state.helloCount.visibilityFilter,
+  }
+}
+
+function mapDispatchToProps(dispatch: Dispatch<{}>): HelloProp {
+  return {
+    filterVisibility: (visibilityFilter: string) => dispatch(GetVisibilityFilterAction(visibilityFilter)),
+    addTodo: (text: string, completed: boolean) => dispatch(GetAddTodoAction(text, completed)),
+    toggleTodo: (toggoleTodoIndex: number) => dispatch(GetToggleTodoAction(toggoleTodoIndex)),
+  }
+}
+
+export default Hello

@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { Dispatch } from 'redux'
 import { Input, Icon, List, Avatar, Dropdown, Button } from 'antd'
 import User from 'model/user'
 import ChatService from 'services/chatService'
