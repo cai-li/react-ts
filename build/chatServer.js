@@ -33,7 +33,7 @@ io.sockets.on('connection', function (socket) {
   });
   // new message get
   socket.on('postMsg', function (msg) {
-    socket.broadcast.emit('newMsg', socket.nickname, msg);
+    io.sockets.emit('newMsg', socket.nickname, msg);
   });
   // new image get
   socket.on('postImg', function (imgData) {

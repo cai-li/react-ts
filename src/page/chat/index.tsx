@@ -1,101 +1,35 @@
 import * as React from 'react'
+import * as moment from 'moment'
+import { connect } from 'react-redux'
 import { Dispatch } from 'redux'
+import { StoreState } from 'store/storeState'
+import { GetIoConnectAction, GetdisConnectAction } from 'actionCreators/chatActionCreator'
 import { Input, Icon, List, Avatar, Dropdown, Button } from 'antd'
+import { idGen } from 'utils/common'
 import User from 'model/user'
-import ChatService from 'services/chatService'
 import UserService from 'services/userService'
+import ChatService, { MessageParam } from './chatService'
 import { ChatState, Record } from './typeModel/chat'
 import './chat.less'
 
-const res = [
-  {
-    id: '1',
-    username: '紫薇',
-    online: true,
-  },
-  {
-    id: '2',
-    username: '尔康',
-    online: false,
-  },
-  {
-    id: '3',
-    username: 'xiaoli',
-    online: true,
-  },
-]
+interface ChatProps {
+  ws?: SocketIOClient.Socket
+  ioConnect?: () => void
+  ioDisconnect?: (ws: SocketIOClient.Socket) => void
+}
 
-export default class Chat extends React.Component<any, ChatState> {
+@connect(mapStateToProps, mapDispatchToProps)
+export default class Chat extends React.Component<ChatProps, ChatState> {
   public state: ChatState
 
-  constructor(props: any) {
+  constructor(props: ChatProps) {
     super(props)
     this.state = {
-      filter: '',
-      users: [], // 所有在线用户
-      recordList: [
-        {
-          id: '1',
-          type: 'system',
-          name: '紫薇',
-          time: '2017-10-30 下午18:50:12',
-          content: '加入了群聊',
-        },
-        {
-          id: '2',
-          type: 'system',
-          name: '尔康',
-          time: '2017-10-30 下午18:50:12',
-          content: '加入了群聊',
-        },
-        {
-          id: '3',
-          type: 'user',
-          name: '紫薇',
-          time: '2017-10-30 下午18:50:12',
-          isSelf: false,
-          content: '山无棱天地合才敢与君绝',
-          src: 'http://tvax2.sinaimg.cn/crop.0.10.1242.1242.50/7d7256a1ly8fk6hkgoyexj20yi0z2jvn.jpg',
-        },
-        {
-          id: '4',
-          type: 'user',
-          name: '尔康',
-          time: '2017-10-30 下午18:50:12',
-          isSelf: true,
-          content: '海可枯 石可烂 激情永不散',
-          src: 'http://tvax2.sinaimg.cn/crop.0.10.1242.1242.50/7d7256a1ly8fk6hkgoyexj20yi0z2jvn.jpg',
-        },
-        {
-          id: '5',
-          type: 'user',
-          name: '紫薇',
-          time: '2017-10-30 下午18:50:12',
-          isSelf: false,
-          content: '山无棱天地合才敢与君绝',
-          src: 'http://tvax2.sinaimg.cn/crop.0.10.1242.1242.50/7d7256a1ly8fk6hkgoyexj20yi0z2jvn.jpg',
-        },
-        {
-          id: '6',
-          type: 'user',
-          name: '紫薇',
-          time: '2017-10-30 下午18:50:12',
-          isSelf: false,
-          content: '山无棱天地合才敢与君绝',
-          src: 'http://tvax2.sinaimg.cn/crop.0.10.1242.1242.50/7d7256a1ly8fk6hkgoyexj20yi0z2jvn.jpg',
-        },
-        {
-          id: '7',
-          type: 'user',
-          name: '紫薇',
-          time: '2017-10-30 下午18:50:12',
-          isSelf: false,
-          content: '山无棱天地合才敢与君绝',
-          src: 'http://tvax2.sinaimg.cn/crop.0.10.1242.1242.50/7d7256a1ly8fk6hkgoyexj20yi0z2jvn.jpg',
-        },
-      ], // 聊天信息列表
-      count: 0, // 当前在线人数
+      userFilter: '',
+      chatUsers: [],
+      recordList: [],
       showIm: false,
+      message: '',
     }
   }
 
@@ -107,8 +41,7 @@ export default class Chat extends React.Component<any, ChatState> {
    * @memberof Chat
    */
   private get usersTem() {
-    console.log(ChatService.chatUsers)
-    return ChatService.chatUsers.filter((user: User) => user.username.includes(this.state.filter))
+    return this.state.chatUsers.filter((user: User) => user.username.includes(this.state.userFilter))
   }
 
   /**
@@ -119,12 +52,12 @@ export default class Chat extends React.Component<any, ChatState> {
    * @memberof Chat
    */
   private get onLineUser() {
-    return ChatService.chatUsers.filter((user: User) => user.online)
+    return this.state.chatUsers.filter((user: User) => user.online)
   }
 
-  private filterChanged(filter: string) {
+  private filterChanged(userFilter: string) {
     this.setState({
-      filter,
+      userFilter,
     })
   }
 
@@ -133,30 +66,157 @@ export default class Chat extends React.Component<any, ChatState> {
     const k = 'todo'
   }
 
-  private handleSubmit(e: Event) {
-    // todo
-    const k = 'todo'
-  }
+  private async handleSubmit(e?: React.KeyboardEvent<HTMLTextAreaElement>) {
+    const message = this.state.message.trim()
+    const messageId = idGen()
+    if (message === '' || (e && e.keyCode !== 13)) return
 
-  private async loadChat(): Promise<any> {
     try {
-      await ChatService.connect()
-      await ChatService.enterChat(UserService.current.username)
+      await ChatService.sendMsg(this.props.ws, messageId, message)
+      const newMsg = new Record({
+        id: messageId,
+        type: 'user',
+        name: UserService.current.username,
+        isSelf: true,
+        content: message,
+        state: false,
+      })
+
+      this.setState({
+        recordList: this.state.recordList.concat(newMsg),
+      })
+
+      this.setState({
+        message: '',
+      })
     } catch (e) {
       console.log('服务错误：', e)
     }
   }
 
-  private async leaveChat() {
-    await ChatService.leaveChat()
+  private CalChatUser(users: string[]) {
+    const chatUsers = users.map((user) => new User({
+      username: user,
+      online: true,
+    }))
+
+    this.setState({
+      chatUsers,
+    })
   }
 
-  public componentDidMount() {
-    this.loadChat()
+  private calUserMsg(name: string, msgObj: MessageParam) {
+    const time = moment().format()
+
+    if (name === UserService.current.username) {
+      const recordList = this.state.recordList.map((record) => {
+        if (record.id === msgObj.msgId) {
+          record.time = time
+          record.state = true
+        }
+        return record
+      })
+
+      this.setState({
+        recordList,
+      })
+    } else {
+      const newMsg = new Record({
+        id: msgObj.msgId,
+        type: 'user',
+        name,
+        isSelf: name === UserService.current.username,
+        time,
+        content: msgObj.msg,
+        state: true,
+      })
+      this.setState({
+        recordList: this.state.recordList.concat(newMsg),
+      })
+    }
+
+  }
+
+  private calMsgs(name: string, state: 'login' | 'logout', msg: string = '') {
+    const type = 'system'
+    const id = idGen()
+    const time = moment().format()
+    let content = ''
+    if (state === 'login') {
+      content = '加入了群聊'
+    } else if (state === 'logout') {
+      content = '离开了群聊'
+    } else {
+      content = msg
+    }
+
+    const newMsg = new Record({
+      id,
+      type,
+      name,
+      time,
+      isSelf: name === UserService.current.username,
+      content,
+      state: true,
+    })
+
+    this.setState({
+      recordList: this.state.recordList.concat(newMsg),
+    })
+  }
+
+  private async loadChat(): Promise<any> {
+    const { ws } = this.props
+    try {
+      await ChatService.enterChat(ws, UserService.current.username)
+    } catch (e) {
+      console.log('服务错误：', e)
+    }
+  }
+
+  public async componentDidMount() {
+    await this.props.ioConnect()
+    await this.loadChat()
+    const { ws } = this.props
+
+    // 测试是否连接上websocket
+    ws.on('connect', () => console.log('连接web服务器成功'))
+
+    // socket监听
+    ws.on('enterChatSuccess', (nickName: string, users: string[]) => {
+      console.log('进入聊天室:', users)
+    })
+
+    // 系统消息
+    ws.on('system', (nickName: string, users: string[], state: 'login' | 'logout') => {
+      console.log('系统消息:', nickName, state)
+      this.CalChatUser(users)
+      this.calMsgs(nickName, state)
+    })
+
+    // 用户名重名
+    ws.on('nickExisted', (nickName: string, users: any) => {
+      console.log('登录用户名重复，请重新登录设置不同的用户名')
+    })
+
+    // 聊天信息
+    ws.on('newMsg', (nickName: string, msg: MessageParam) => {
+      console.log('聊天信息：', msg)
+      this.calUserMsg(nickName, msg)
+    })
+
+    // 聊天表情
+    ws.on('newImg', (nickName: string, imgData: any) => {
+      console.log('聊天表情:', imgData)
+    })
   }
 
   public componentWillUnmount() {
-    this.leaveChat()
+    this.props.ioDisconnect(this.props.ws)
+  }
+
+  private faceClick(item: string) {
+
   }
 
   /**
@@ -167,19 +227,36 @@ export default class Chat extends React.Component<any, ChatState> {
    * @memberof Chat
    */
   private initEmoji(): React.ReactNode {
-    return <div>1222</div>
+    const emojis = []
+    const url = location.href.split('#')[0]
+    for (let i = 1; i < 70; i++) {
+      emojis.push(i + '')
+    }
+    return (
+      <div className="pageChat-emojis" id="emojis">
+        {
+          emojis.map((item) =>
+            <span
+              key={item}
+              title={item}
+              className="face"
+              onClick={() => this.faceClick(item)}
+            ><img src={`${url}asset/emoji/${item}.gif`} />
+            </span>)
+        }
+      </div>
+    )
   }
 
   public render() {
-    const { filter, recordList } = this.state
-    console.log(this.onLineUser)
+    const { userFilter, recordList } = this.state
     return (
       <div className="pageChat">
         {/* 用户列表 */}
         <div className="pageChat-left">
           <Input
             placeholder="请输入关键字查询"
-            value={filter}
+            value={userFilter}
             onChange={(e: any) => this.filterChanged(e.target.value)} />
           <div className="userList">
             <List
@@ -203,7 +280,9 @@ export default class Chat extends React.Component<any, ChatState> {
           <div className="onlineUserNum">当前在线人数：<span>{this.onLineUser.length}</span></div>
           <div className="recordArea">
             {recordList.map((record: Record, index) =>
-              <div key={index} className={record.isSelf ? 'recordArea-item isRight' : 'recordArea-item'}>
+              <div
+                key={index}
+                className={record.isSelf && record.type === 'user' ? 'recordArea-item isRight' : 'recordArea-item'}>
                 {record.type === 'system' ?
                   <div className="recordArea-item--system">
                     <p>系统消息：{record.name} {record.content} {record.time}</p>
@@ -211,9 +290,10 @@ export default class Chat extends React.Component<any, ChatState> {
                   <div className="recordArea-item--user">
                     <Icon className="user-avatar" type="github" />
                     <div className="user-content">
+
                       {!record.isSelf && <p className="info">{record.name} {record.time}</p>}
                       <div className={record.isSelf ? 'arrow-left' : 'arrow-right'}></div>
-                      <p className="content">{record.content}</p>
+                      <p className="content">{!record.state && <span>!</span>}{record.content}</p>
                     </div>
                   </div>}
               </div>,
@@ -237,7 +317,11 @@ export default class Chat extends React.Component<any, ChatState> {
             <div className="sendArea-msg">
               <Input.TextArea
                 placeholder="在这里输入信息"
-                onKeyUp={(e: any) => this.handleSubmit(e)} />
+                value={this.state.message}
+                onChange={(e: any) => {
+                  this.setState({ message: e.target.value })
+                }}
+                onKeyUp={(e: React.KeyboardEvent<HTMLTextAreaElement>) => this.handleSubmit(e)} />
             </div>
 
             <div className="sendArea-send">
@@ -252,12 +336,25 @@ export default class Chat extends React.Component<any, ChatState> {
                 type="primary"
                 size="default"
                 className="send"
-                onClick={(e: any) => this.handleSubmit(e)}
+                onClick={() => this.handleSubmit()}
               >发送</Button>
             </div>
           </div>
         </div>
       </div >
     )
+  }
+}
+
+function mapStateToProps(state: StoreState): ChatProps {
+  return {
+    ws: state.chatProps.ws,
+  }
+}
+
+function mapDispatchToProps(dispatch: Dispatch<{}>): ChatProps {
+  return {
+    ioConnect: () => dispatch(GetIoConnectAction()),
+    ioDisconnect: (ws: SocketIOClient.Socket) => dispatch(GetdisConnectAction(ws)),
   }
 }
