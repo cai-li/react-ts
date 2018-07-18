@@ -3,7 +3,7 @@ var fs = require('fs')
 const path = require('path')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')//css单独打包
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const tsImportPluginFactory = require('ts-import-plugin')
+const tsImportPluginFactory = require('ts-import-plugin') // 依赖ts-loader
 
 const isLocal = process.env.NODE_ENV === 'local'
 const isDevelop = process.env.NODE_ENV === 'develop'
@@ -61,9 +61,9 @@ var config = {
           transpileOnly: true,
           getCustomTransformers: () => ({
             before: [tsImportPluginFactory({ libraryName: "antd", style: true })]
-          }), // antd按需引入的配置 ，style设置为true是为了样式主题自定义
+          }), // antd按需引入使用ts-import-plugin
           compilerOptions: {
-            module: 'es2015'
+             module: 'es2015'
           }
         }
       },

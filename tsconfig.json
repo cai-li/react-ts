@@ -8,21 +8,22 @@
       "scripthost"
     ],
     "target": "es5",
-    "module": "commonjs",
     "jsx": "react",
     "outDir": "./dist/",
     "sourceMap": true,
     "noImplicitAny": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "declaration": false,
     "removeComments": true,
     "noLib": false,
     "preserveConstEnums": true,
     "suppressImplicitAnyIndexErrors": true,
     "typeRoots": [
-      "typings", "node_modules/@types"
+      "src/typings", "node_modules/@types"
     ],// type路径查找包括typings和。。。
     "baseUrl": "src" // 解析非相对模块名的基准目录
-  } 
+  },
+  "include": [
+    "./src/**/*"
+  ] 
 }
