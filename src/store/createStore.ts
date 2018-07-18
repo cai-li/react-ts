@@ -16,7 +16,7 @@ export function configureStore(initialState?: StoreState): Store<StoreState> {
 
   const store = createStore(rootReducer, initialState, composeEnhancers(
       applyMiddleware(...middlewares),
-  ));
+  ))
 
   if (module.hot) {
       module.hot.accept('./../reducers/index', () => {
