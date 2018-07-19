@@ -1,0 +1,130 @@
+@import '~styles/theme';
+.pageChat-emojis {
+  display: flex;
+  width:400px;
+  flex-wrap: wrap;
+  .face {
+    flex:0 0 30px;
+    width:30px;
+    height:30px;
+    img {
+      width:100%;
+      height:100%;
+    }
+  }
+}
+
+.pageChat {
+  display: flex;
+  width: 100%;
+  &-left {
+    flex: 0 0 160px;
+    width: 160px;
+    padding: 10px;
+    border-right: 1px solid @theme-gray-base;
+  }
+  &-right {
+    display:flex;
+    height:100%;
+    overflow: hidden;
+    flex-direction: column;
+    flex: 1;
+    .onlineUserNum {
+      flex:0 0 32px;
+      box-sizing: content-box;
+      height: 32px;
+      line-height: 32px;
+      padding: 10px 0 0 10px;
+      color: @theme-blue-base;
+      border-bottom: 1px solid @theme-gray-base;
+    }
+    .recordArea {
+      flex:1;
+      overflow-y: auto;
+      background: @theme-gray-bgk;
+      border-bottom: 1px solid @theme-gray-base;
+      .recordArea-item {
+        display: flex;
+        padding-top: 15px;
+        &--system {
+          margin: 0 10px;
+          height: 14px;
+          line-height: 14px;
+          color: @theme-blue-base;
+          font-size: 12px;
+        }
+        &--user {
+          display: flex;
+          align-items: center;
+        }
+        .user-avatar {
+          font-size: 30px;
+          margin: 0 10px;
+        }
+        .user-content {
+          font-size: 12px;
+          .info {
+            margin-bottom: 3px;
+          }
+          .content {
+            border: 1px solid @theme-gray-base;
+            background: @theme-gray-chat;
+            padding: 5px 5px;
+            border-radius: 3px;
+          }
+        }
+      }
+      .isRight {
+        justify-content: flex-end;
+        .recordArea-item--user {
+          flex-direction: row-reverse;
+          .user-content {
+            text-align: right;
+          }
+        }
+      }
+    }
+    .sendArea {
+      display:flex;
+      flex-direction: column;
+      flex:0 0 110px;
+      height: 110px;
+      padding-bottom:5px;
+      box-sizing: content-box;
+      &-tool {
+        flex:0 0 36px;
+        height: 36px;
+        line-height: 36px;
+        padding-left: 10px;
+        .tools {
+          margin-right: 15px;
+        }
+        .anticon {
+          font-size: 18px;
+        }
+      }
+
+      &-msg {
+        flex:1;
+         textarea{
+          width:100%;
+          border:none;
+          padding:0 11px;
+          resize:none;
+          &:focus {
+            border:none;
+            box-shadow:none;
+          }
+        }
+      }
+
+      &-send {
+        flex:0 0 32px;
+        text-align:right;
+        .send {
+          margin-left:15px;
+        }
+      }
+    }
+  }
+}

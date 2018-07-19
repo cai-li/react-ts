@@ -3,10 +3,11 @@ var fs = require('fs')
 const path = require('path')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')//css单独打包
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const tsImportPluginFactory = require('ts-import-plugin')
+const tsImportPluginFactory = require('ts-import-plugin') // 依赖ts-loader
 
 const isLocal = process.env.NODE_ENV === 'local'
 const isDevelop = process.env.NODE_ENV === 'develop'
+const isProduction = process.env.NODE_ENV === 'production'
 
 function resolve(relatedPath) {
   return path.join(__dirname, relatedPath)
@@ -30,7 +31,7 @@ if (pkg.theme && typeof pkg.theme === 'string') {
   theme = pkg.theme
 }
 
-module.exports = {
+var config = {
   entry: {
     app: resolve('../src/index.tsx'),
   },
@@ -60,9 +61,9 @@ module.exports = {
           transpileOnly: true,
           getCustomTransformers: () => ({
             before: [tsImportPluginFactory({ libraryName: "antd", style: true })]
-          }), // antd按需引入的配置 ，style设置为true是为了样式按需引入
+          }), // antd按需引入使用ts-import-plugin
           compilerOptions: {
-            module: 'es2015'
+             module: 'es2015'
           }
         }
       },
@@ -94,7 +95,6 @@ module.exports = {
             {
               loader: 'less-loader',
               options: {
-                sourceMap: true,
                 modules: false,
                 modifyVars: theme,
               }
@@ -133,5 +133,17 @@ module.exports = {
       inject: 'body',
       favicon: resolve('../src/asset/favicon.ico') // 容易被缓存干扰
     }),
+    new webpack.DefinePlugin({
+      DEBUG: true
+    }),
   ],
 };
+
+if(isProduction){
+  config.plugins.push(new webpack.DefinePlugin({
+    'process.env': {NODE_ENV: '"production"'},
+    DEBUG: false
+  }));
+}
+
+module.exports = config

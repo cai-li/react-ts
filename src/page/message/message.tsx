@@ -1,11 +1,11 @@
 import * as React from 'react'
 
-interface propsType {
-  params?:any
-  [name:string]:any
+interface PropsType {
+  params?: any
+  [name: string]: any
 }
 
-export default class Message extends React.Component<propsType,{}>{
+export default class Message extends React.Component<PropsType, {}>{
   public state: any
 
   constructor(props: any) {
@@ -17,7 +17,7 @@ export default class Message extends React.Component<propsType,{}>{
     return (
       <div className="2">
         内容1
-        {this.props.params.id || "默认"}
+        {this.props.params.id || '默认'}
       </div>
     )
   }

@@ -1,9 +1,7 @@
 import * as React from 'react'
 import { browserHistory } from 'react-router'
-import Store from '../../store/index'
+import { Button } from 'antd'
 import './about.less'
-import './dd.css'
-import { Button } from "antd"
 
 export default class About extends React.Component {
   public state: any
@@ -14,7 +12,6 @@ export default class About extends React.Component {
   }
 
   public toHome() {
-    console.log(Store.getState())
     browserHistory.push("/login")
   }
 

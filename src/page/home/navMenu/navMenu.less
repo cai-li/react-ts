@@ -1,0 +1,27 @@
+@import "~styles/theme";
+
+.navMenu {
+  display: flex;
+  flex-direction: column;
+  width: 165px;
+  flex: 0 0 165px;
+  &-mini {
+    width: 80px;
+    flex: 0 0 80px;
+  }
+
+  &-switch {
+    flex:0 0 32px;
+    height:32px;
+    line-height: 32px;
+    margin:0;
+    background:@theme-light8-black;
+    color: white;
+    text-align: center;
+    cursor: pointer;
+  }
+
+  &-menu {
+    flex:1;
+  }
+}

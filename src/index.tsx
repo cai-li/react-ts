@@ -1,13 +1,15 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
-import { DatePicker } from 'antd'
-import Routers from './router/index'
 import { Provider } from 'react-redux'
-import Store from './store/index'
+import Routes from 'router/index'
+import { configureStore } from 'store/createStore'
+import 'styles/base.less'
+
+const Store = configureStore()
 
 ReactDOM.render(
   <Provider store={Store}>
-     <Routers />
+    <Routes />
   </Provider>,
   document.getElementById('root') as HTMLElement,
 )

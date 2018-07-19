@@ -1,32 +1,36 @@
 import * as React from 'react'
-import hashHistory from '../../router/history'
+import { RouteComponentProps } from 'react-router'
+import hashHistory from 'router/history'
+import { PageMap } from 'router/routerdef'
+import Header from 'page/home/header/index'
+import NavMenu from 'page/home/navMenu/index'
+import './home.less'
 
-interface HelloProps {
-  children?: any
-}
-
-export default class Home extends React.Component<HelloProps, {}> {
+export default class Home extends React.Component<RouteComponentProps<any, any>, any> {
   public state: any
 
-  constructor(props: HelloProps) {
+  constructor(props: RouteComponentProps<any, any>) {
     super(props)
     this.state = null
   }
 
-  public toMessage() {
-    hashHistory.push('home/messages/1')
+  private calHomeClass(): string {
+    let className = 'homeMain-pages'
+    if (!this.props.children) className += ' homeMain-noPage'
+    return className
   }
 
   public render() {
     const { children, location } = this.props
     return (
-      <div className="2">
-        {this.props.children ||
-          <div>
-            主页
-            <button onClick={() => this.toMessage()}>查看详情</button>
-          </div>
-        }
+      <div className="pageHome">
+        <Header />
+        <main className="homeMain">
+          <NavMenu pathname={location.pathname}></NavMenu>
+          <main className={this.calHomeClass()}>
+            {!children ? <h1 className="homeMain-noPage--wel">welcome !</h1> : children}
+          </main>
+        </main>
       </div>
     )
   }
