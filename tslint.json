@@ -1,5 +1,8 @@
 {
-  "extends": "tslint:recommended",
+  "extends": [
+    "tslint-react",
+    "tslint-eslint-rules"
+  ],
   "rules": {
     "semicolon": [
       true,
