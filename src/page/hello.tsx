@@ -11,6 +11,9 @@ import Affix from 'component/affix/index'
 import LiIcon from 'component/icon/icon'
 import LiButton from 'component/button/index'
 
+const LiButtonGroup = LiButton.Group
+const ButtonGroup = Button.Group
+
 interface ItemTodo {
   text: string
   completed: boolean
@@ -60,7 +63,7 @@ class Hello extends React.Component<HelloProp, {}> {
 
   private liButtonClick: React.MouseEventHandler<HTMLElement> = e => {
     // e.stopPropagation()
-   
+
     this.setState({
       iconload: { delay: 2000 }
     })
@@ -100,6 +103,13 @@ class Hello extends React.Component<HelloProp, {}> {
           onClick={this.liButtonClick}>
           测试
         </LiButton>
+
+        <ButtonGroup></ButtonGroup>
+
+        <LiButtonGroup size="small">
+          <LiButton type='primary'>测试1</LiButton>
+          <LiButton type='primary'> 测试2</LiButton>
+        </LiButtonGroup>
 
         {/* 固钉组件 */}
         <div className="affixWrapper">
