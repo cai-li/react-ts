@@ -5,10 +5,10 @@ import LiIcon from 'component/icon/icon'
 import { findDOMNode } from 'react-dom'
 import LiButtonGroup from './button-group'
 
-const rxTwoCNChar = /^[\u4e00-\u9fa5]{2}$/; //匹配两个汉字
-const isTwoCNChar = rxTwoCNChar.test.bind(rxTwoCNChar);
+const rxTwoCNChar = /^[\u4e00-\u9fa5]{2}$/ //匹配两个汉字
+const isTwoCNChar = rxTwoCNChar.test.bind(rxTwoCNChar)
 function isString(str: any) {
-  return typeof str === 'string';
+  return typeof str === 'string'
 }
 
 /**
@@ -21,7 +21,7 @@ function isString(str: any) {
  */
 function insertSpace(child: React.ReactChild, needInserted: boolean) {
   if (!child) return
-  const SPACE = needInserted ? ' ' : '';
+  const SPACE = needInserted ? ' ' : ''
 
   if (typeof child !== 'string' && typeof child !== 'number' &&
     isString(child.type) && isTwoCNChar(child.props.children)) {
@@ -33,10 +33,10 @@ function insertSpace(child: React.ReactChild, needInserted: boolean) {
     if (isTwoCNChar(child)) {
       child = child.split('').join(SPACE)
     }
-    return <span>{child}</span>;
+    return <span>{child}</span>
   }
 
-  return child;
+  return child
 }
 
 export type ButtonType = 'default' | 'primary' | 'ghost' | 'dashed' | 'danger'
@@ -59,14 +59,14 @@ export type AnchorButtonProps = {
   href: string;
   target?: string;
   onClick?: React.MouseEventHandler<HTMLAnchorElement>;
-} & BaseButtonProps & React.AnchorHTMLAttributes<HTMLAnchorElement>;
+} & BaseButtonProps & React.AnchorHTMLAttributes<HTMLAnchorElement>
 
 export type NativeButtonProps = {
   htmlType?: ButtonHTMLType;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
-} & BaseButtonProps & React.ButtonHTMLAttributes<HTMLButtonElement>;
+} & BaseButtonProps & React.ButtonHTMLAttributes<HTMLButtonElement>
 
-export type ButtonProps = AnchorButtonProps | NativeButtonProps;
+export type ButtonProps = AnchorButtonProps | NativeButtonProps
 
 export default class LiButton extends React.Component<ButtonProps, any> {
   private timeout: number
@@ -110,7 +110,7 @@ export default class LiButton extends React.Component<ButtonProps, any> {
 
   // 组件已更新时，使用此方法作为操作 DOM 的一个机会
   componentDidUpdate() {
-    this.fixTwoCNChar();
+    this.fixTwoCNChar()
   }
 
   componentWillUnmount() {
@@ -125,20 +125,20 @@ export default class LiButton extends React.Component<ButtonProps, any> {
       if (!this.state.hasTwoCNChar) {
         this.setState({
           hasTwoCNChar: true,
-        });
+        })
       }
     } else if (this.state.hasTwoCNChar) {
       this.setState({
         hasTwoCNChar: false,
-      });
+      })
     }
   }
 
   private handleClick: React.MouseEventHandler<HTMLButtonElement | HTMLAnchorElement> = e => {
     this.setState({
       clicked: true
-    });
-    clearTimeout(this.timeout);
+    })
+    clearTimeout(this.timeout)
     this.timeout = window.setTimeout(() => {
       this.setState({
         clicked: false
@@ -157,9 +157,9 @@ export default class LiButton extends React.Component<ButtonProps, any> {
    * @returns {boolean} 
    * @memberof LiButton
    */
-  isNeedInserted(): boolean {
-    const { icon, children } = this.props;
-    return React.Children.count(children) === 1 && !icon;
+  private isNeedInserted(): boolean {
+    const { icon, children } = this.props
+    return React.Children.count(children) === 1 && !icon
   }
 
   public render() {
@@ -170,16 +170,16 @@ export default class LiButton extends React.Component<ButtonProps, any> {
 
     const { clicked, hasTwoCNChar, loading } = this.state
 
-    let sizeCls = '';
+    let sizeCls = ''
     switch (size) {
       case 'small':
-        sizeCls = 'sm';
-        break;
+        sizeCls = 'sm'
+        break
       case 'large':
-        sizeCls = 'lg';
-        break;
+        sizeCls = 'lg'
+        break
       default:
-        break;
+        break
     }
     const classes = classNames(prefixCls, className, {
       [`${prefixCls}-${type}`]: type,
@@ -191,7 +191,7 @@ export default class LiButton extends React.Component<ButtonProps, any> {
       [`${prefixCls}-two-chinese-chars`]: hasTwoCNChar
     })
 
-    const iconType = loading ? 'loading' : icon;
+    const iconType = loading ? 'loading' : icon
     const iconNode = iconType ? <LiIcon type={iconType} /> : null
     const kids = (children || children === 0) ?
       React.Children.map(children, (child, index) => insertSpace(child, this.isNeedInserted())) : null
@@ -204,7 +204,7 @@ export default class LiButton extends React.Component<ButtonProps, any> {
           onClick={this.handleClick}>{iconNode}{kids}</a>
       )
     } else {
-      const { htmlType, ...otherProps } = rest;
+      const { htmlType, ...otherProps } = rest
       return (
         <button
           {...otherProps}

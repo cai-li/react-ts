@@ -1,9 +1,6 @@
 {
-  "extends": [
-    "tslint-react",
-    "tslint-eslint-rules"
-  ],
   "rules": {
+    "extends": "tslint:recommended",
     "semicolon": [
       true,
       "never"
