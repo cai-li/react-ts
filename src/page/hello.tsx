@@ -5,11 +5,12 @@ import { StoreState } from 'store/storeState'
 import {
   GetVisibilityFilterAction, GetAddTodoAction, GetToggleTodoAction,
 } from 'actionCreators/helloActionCreator'
-import { Button, Icon } from 'antd'
+import { Button, Icon, Row } from 'antd'
 import './hello.less'
 import Affix from 'component/affix/index'
 import LiIcon from 'component/icon/icon'
 import LiButton from 'component/button/index'
+import { LiRow, LiCol } from '../component/grid/index'
 
 const LiButtonGroup = LiButton.Group
 const ButtonGroup = Button.Group
@@ -43,7 +44,7 @@ class Hello extends React.Component<HelloProp, {}> {
     this.props.addTodo('张山', false)
   }
 
-  private filterChanged(e: React.ChangeEvent<HTMLInputElement>) {
+  private filterChanged: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     this.props.filterVisibility(e.target.value)
   }
 
@@ -52,21 +53,37 @@ class Hello extends React.Component<HelloProp, {}> {
     this.props.toggleTodo(0)
   }
 
-  private iconClick(e: React.MouseEvent) {
+  private iconClick: React.MouseEventHandler<HTMLInputElement> = (e) => {
     console.log('liicon')
   }
 
-  private mouseover: React.MouseEventHandler<HTMLElement> = e => {
-    // e.stopPropagation()
+  private mouseover: React.MouseEventHandler<HTMLElement> = (e) => {
     console.log('123')
   }
 
-  private liButtonClick: React.MouseEventHandler<HTMLElement> = e => {
-    // e.stopPropagation()
-
+  private liButtonClick: React.MouseEventHandler<HTMLElement> = (e) => {
     this.setState({
       iconload: { delay: 2000 }
     })
+  }
+
+  componentDidMount() {
+    const tt = {
+      k: 1,
+      p: 2,
+      d: 3
+    }
+
+    type Partial<T> = {
+      [P in keyof T]?: T[P]
+    }
+
+    const res = pluck(tt, ['k', 'p', 'd'])
+
+    const k: Partial<typeof tt> = {
+      k: 12,
+    }
+
   }
 
   public render() {
@@ -79,7 +96,7 @@ class Hello extends React.Component<HelloProp, {}> {
         <div className="pageHello-todo">
           <input type="text"
             value={visibilityFilter}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => this.filterChanged(e)} />
+            onChange={this.filterChanged} />
 
           <div className="greeting">
             {todosFilted && todosFilted.map((todo, index) => {
@@ -94,22 +111,39 @@ class Hello extends React.Component<HelloProp, {}> {
         </div>
 
         {/* Icon */}
-        <LiIcon type='bitian' onClick={(e) => this.iconClick(e)} />
+        <LiIcon type="bitian" onClick={this.iconClick} />
 
         {/* Button */}
         <LiButton
           loading={this.state.iconload}
-          type='ghost'
+          type="ghost"
           onClick={this.liButtonClick}>
           测试
         </LiButton>
 
-        <ButtonGroup></ButtonGroup>
-
+        {/* button-group */}
         <LiButtonGroup size="small">
-          <LiButton type='primary'>测试1</LiButton>
-          <LiButton type='primary'> 测试2</LiButton>
+          <LiButton type="primary">测试1</LiButton>
+          <LiButton type="primary"> 测试2</LiButton>
         </LiButtonGroup>
+
+        <div className="hello-liRow">
+          <Row type="flex" gutter={{ 'xl': 10, 'md': 20 }}>
+            <div>测试行1</div>
+            <div>测试行2</div>
+          </Row>
+        </div>
+
+        {/* grid-row */}
+        <div className="hello-liRow">
+          <LiRow type="flex" gutter={{ 'xl': 10, 'md': 20 }} align="middle">
+            <LiCol span={8}>测试行1</LiCol>
+            <LiCol span={16}>测试行2</LiCol>
+            <LiCol span={8}>测试行1</LiCol>
+            <LiCol span={16}>测试行2</LiCol>
+          </LiRow>
+        </div>
+
 
         {/* 固钉组件 */}
         <div className="affixWrapper">
@@ -138,3 +172,8 @@ function mapDispatchToProps(dispatch: Dispatch<{}>): HelloProp {
 }
 
 export default Hello
+
+function pluck<T, K extends keyof T>(o: T, names: K[]): T[K][] {
+  return names.map(n => o[n])
+}
+
