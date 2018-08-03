@@ -14,6 +14,9 @@ export const enum RouteDef {
   // 其他
   other = 'other',
 
+  // 测试demo
+  demo = 'demo',
+
   // 表格
   table = 'table',
 
@@ -29,8 +32,11 @@ export const enum RouteDef {
   // 关于界面
   about = 'about',
 
-  // demo1
+  // demo-hello
   hello = 'hello',
+
+  // demo-context
+  context = 'context',
 }
 
 export class Page {
@@ -88,8 +94,18 @@ const Pages: Page[] = [
     ]
   }),
   new Page({
-    name: RouteDef.hello,
-    title: 'hello',
+    name: RouteDef.demo,
+    title: '测试demo',
+    children: [
+      new Page({
+        name: RouteDef.hello,
+        title: 'hello',
+      }),
+      new Page({
+        name: RouteDef.context,
+        title: 'context',
+      }),
+    ]
   }),
 ]
 

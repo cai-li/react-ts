@@ -139,6 +139,12 @@ const Hello = (location: any, cb: any) => {
   }, () => { }, 'hello')
 }
 
+const Context = (location: any, cb: any) => {
+  require.ensure([], (require: NodeRequire) => {
+    cb(null, require('../page/context').default)
+  }, () => { }, 'context')
+}
+
 export default () => (
   <Router history={hashHistory}>
     <Route path="/"
@@ -168,6 +174,10 @@ export default () => (
 
         <Route path={RouteDef.hello}
           getComponent={Hello} />
+
+        <Route path={RouteDef.context}
+          getComponent={Context} />
+
       </Route>
 
       {/* 404 */}

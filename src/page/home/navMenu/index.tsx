@@ -4,6 +4,7 @@ import { ClickParam } from 'antd/lib/menu'
 import { PageMap, Page } from 'router/routerdef'
 import hashHistory from 'router/history'
 import UserService from 'services/userService'
+import classNames from 'classnames'
 import './navMenu.less'
 
 const SubMenu = Menu.SubMenu
@@ -27,17 +28,13 @@ export default class NavMenu extends React.Component<NavMenuProps, any> {
     return PageMap
   }
 
-  private get calNavClass(): string {
-    return this.state.collapsed ? 'navMenu navMenu-mini' : 'navMenu'
-  }
-
   private iconType(openKey: string): string {
     switch (openKey) {
       case 'primary':
         return 'home'
       case 'other':
         return 'team'
-      case 'hello':
+      case 'demo':
         return 'smile-o'
     }
   }
@@ -123,9 +120,13 @@ export default class NavMenu extends React.Component<NavMenuProps, any> {
 
   public render() {
     const selectedKeys: string[] = !this.nowPageName ? [] : [this.nowPageName]
-
+    const navClass = classNames({
+      navMenu: true,
+      'navMenu-mini': this.state.collapsed
+    })
+    
     return (
-      <aside className={this.calNavClass}>
+      <aside className={navClass}>
         <div className="navMenu-switch" onClick={(e: any) => this.toggleCollapsed(e)}>
           <Icon type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'} />
         </div>

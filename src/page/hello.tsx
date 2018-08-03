@@ -5,7 +5,7 @@ import { StoreState } from 'store/storeState'
 import {
   GetVisibilityFilterAction, GetAddTodoAction, GetToggleTodoAction,
 } from 'actionCreators/helloActionCreator'
-import { Button, Icon, Row } from 'antd'
+import { Button, Icon, Row, Layout } from 'antd'
 import './hello.less'
 import Affix from 'component/affix/index'
 import LiIcon from 'component/icon/icon'
@@ -14,6 +14,10 @@ import { LiRow, LiCol } from '../component/grid/index'
 
 const LiButtonGroup = LiButton.Group
 const ButtonGroup = Button.Group
+const Header = Layout.Header
+const Content = Layout.Content
+const Footer = Layout.Footer
+const Sider = Layout.Sider
 
 interface ItemTodo {
   text: string
@@ -67,15 +71,11 @@ class Hello extends React.Component<HelloProp, {}> {
     })
   }
 
-  componentDidMount() {
+  public componentDidMount() {
     const tt = {
       k: 1,
       p: 2,
       d: 3
-    }
-
-    type Partial<T> = {
-      [P in keyof T]?: T[P]
     }
 
     const res = pluck(tt, ['k', 'p', 'd'])
@@ -138,13 +138,21 @@ class Hello extends React.Component<HelloProp, {}> {
         <div className="hello-liRow">
           <LiRow type="flex" gutter={{ 'xl': 10, 'md': 20 }} align="middle">
             <LiCol span={8}>测试行1</LiCol>
-            <LiCol span={16}>测试行2</LiCol>
+            <LiCol span={8}>测试行2</LiCol>
             <LiCol span={8}>测试行1</LiCol>
             <LiCol span={16}>测试行2</LiCol>
           </LiRow>
         </div>
 
-
+        {/* layout组件 */}
+        <Layout>
+          <Header>头</Header>
+          <Layout>
+            <Sider>菜单</Sider>
+            <Content>内容</Content>
+          </Layout>
+          <Footer>尾部</Footer>
+        </Layout>
         {/* 固钉组件 */}
         <div className="affixWrapper">
           <Affix />
