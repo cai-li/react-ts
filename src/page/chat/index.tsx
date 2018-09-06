@@ -105,7 +105,7 @@ export default class Chat extends React.Component<ChatProps, ChatState> {
     })
   }
 
-  private calUserMsg(name: string, msgObj: MessageParam) {
+  private calUserMsg(name: string, msgObj: MessageParam, type: 'user' | 'img') {
     const time = moment().format()
 
     if (name === UserService.current.username) {
@@ -123,9 +123,9 @@ export default class Chat extends React.Component<ChatProps, ChatState> {
     } else {
       const newMsg = new Record({
         id: msgObj.msgId,
-        type: 'user',
+        type,
         name,
-        isSelf: name === UserService.current.username,
+        isSelf: false,
         time,
         content: msgObj.msg,
         state: true,
@@ -134,7 +134,6 @@ export default class Chat extends React.Component<ChatProps, ChatState> {
         recordList: this.state.recordList.concat(newMsg),
       })
     }
-
   }
 
   private calMsgs(name: string, state: 'login' | 'logout', msg: string = '') {
@@ -202,12 +201,13 @@ export default class Chat extends React.Component<ChatProps, ChatState> {
     // 聊天信息
     ws.on('newMsg', (nickName: string, msg: MessageParam) => {
       console.log('聊天信息：', msg)
-      this.calUserMsg(nickName, msg)
+      this.calUserMsg(nickName, msg, 'user')
     })
 
     // 聊天表情
     ws.on('newImg', (nickName: string, imgData: any) => {
       console.log('聊天表情:', imgData)
+      this.calUserMsg(nickName, imgData, 'img')
     })
   }
 
@@ -215,8 +215,26 @@ export default class Chat extends React.Component<ChatProps, ChatState> {
     this.props.ioDisconnect(this.props.ws)
   }
 
-  private faceClick(item: string) {
+  private async faceClick(imgIndex: string) {
+    const imgId = idGen()
 
+    await ChatService.sendImg(this.props.ws, {
+      msgId: imgId,
+      msg: imgIndex
+    })
+
+    const newMsg = new Record({
+      id: imgId,
+      type: 'img',
+      name: UserService.current.username,
+      isSelf: true,
+      content: imgIndex,
+      state: false,
+    })
+
+    this.setState({
+      recordList: this.state.recordList.concat(newMsg),
+    })
   }
 
   /**
@@ -246,6 +264,29 @@ export default class Chat extends React.Component<ChatProps, ChatState> {
         }
       </div>
     )
+  }
+
+  private getRecordContent(record: Record) {
+    if (record.type === 'system') {
+      return <div className="recordArea-item--system">
+        <p>系统消息：{record.name} {record.content} {record.time}</p>
+      </div>
+    } else {
+      const url = location.href.split('#')[0]
+
+      const content = record.type === 'img' ?
+        <img src={`${url}asset/emoji/${record.content}.gif`} /> :
+        record.content
+
+      return <div className="recordArea-item--user">
+        <Icon className="user-avatar" type="github" />
+        <div className="user-content">
+          {!record.isSelf && <p className="info">{record.name} {record.time}</p>}
+          <div className={record.isSelf ? 'arrow-left' : 'arrow-right'}></div>
+          <p className="content">{!record.state && <span>!</span>}{content}</p>
+        </div>
+      </div>
+    }
   }
 
   public render() {
@@ -282,20 +323,8 @@ export default class Chat extends React.Component<ChatProps, ChatState> {
             {recordList.map((record: Record, index) =>
               <div
                 key={index}
-                className={record.isSelf && record.type === 'user' ? 'recordArea-item isRight' : 'recordArea-item'}>
-                {record.type === 'system' ?
-                  <div className="recordArea-item--system">
-                    <p>系统消息：{record.name} {record.content} {record.time}</p>
-                  </div> :
-                  <div className="recordArea-item--user">
-                    <Icon className="user-avatar" type="github" />
-                    <div className="user-content">
-
-                      {!record.isSelf && <p className="info">{record.name} {record.time}</p>}
-                      <div className={record.isSelf ? 'arrow-left' : 'arrow-right'}></div>
-                      <p className="content">{!record.state && <span>!</span>}{record.content}</p>
-                    </div>
-                  </div>}
+                className={record.isSelf && (record.type === 'user' || record.type === 'img') ? 'recordArea-item isRight' : 'recordArea-item'}>
+                {this.getRecordContent(record)}
               </div>,
             )}
           </div>

@@ -2,7 +2,7 @@ import User from 'model/user'
 
 export class Record {
   public id: string = ''
-  public type: 'user' | 'system'
+  public type: 'user' | 'system' | 'img'
   public name: string = ''
   public time: string = ''
   public isSelf?: boolean = false
