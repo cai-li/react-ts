@@ -37,8 +37,6 @@ io.sockets.on('connection', function (socket) {
   });
   // new image get
   socket.on('postImg', function (imgData) {
-    console.log(imgData)
     io.sockets.emit('newImg', socket.nickname, imgData);
-   // socket.broadcast.emit('newImg', socket.nickname, imgData);
   });
 });
