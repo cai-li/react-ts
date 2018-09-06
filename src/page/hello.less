@@ -1,3 +1,30 @@
-.hello {
-  background:#ccc;
+.pageHello {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  font-size: 12px;
+  background: rgb(245, 245, 239);
+  &-todo {
+    width: 200px;
+    height: 200px;
+    border: 1px solid #ccc;
+    overflow: auto;
+    margin-right: 15px;
+  }
+  .affixWrapper {
+    height: 200px;
+    width: 200px;
+    background: rgb(238, 234, 234);
+    border: 1px solid #ccc;
+    overflow-y: auto;
+    .content {
+      height: 500px;
+    }
+  }
+  .hello-liRow {
+    width:200px;
+    margin:0 20px;
+    height:40px;
+    border: 1px solid #ccc;
+  }
 }
